@@ -1603,7 +1603,7 @@ local Library do
         end)
 
         Library:Connect(UserInputService.InputChanged, function(Input)
-            if Input.UserInputType == Enum.UserInputType.MouseMovement then
+            if Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch then
                 if SlidingPalette then 
                     Colorpicker:SlidePalette(Input)
                 elseif SlidingHue then 
@@ -1634,9 +1634,13 @@ local Library do
     Library.Window = function(self, Data)
         Data = Data or { }
 
+        local ScreenSize = Camera.ViewportSize
+        local DefaultWidth = math.min(681, ScreenSize.X * 0.9)
+        local DefaultHeight = math.min(480, ScreenSize.Y * 0.9)
+
         local Window = {
             Logo = Data.Logo or Data.logo or "123748867365417",
-            Size = Data.Size or Data.size or UDim2New(0, 681, 0, 480),
+            Size = Data.Size or Data.size or UDim2New(0, DefaultWidth, 0, DefaultHeight),
             FadeSpeed = Data.FadeSpeed or Data.fadespeed or 0.2,
             PagePadding = Data.PagePadding or Data.pagepadding or 19,
 
@@ -1653,7 +1657,7 @@ local Library do
                 BorderColor3 = FromRGB(0, 0, 0),
                 AnchorPoint = Vector2New(0, 0),
                 Name = "\0",
-                Position = UDim2New(0, Camera.ViewportSize.X / 3.5, 0, Camera.ViewportSize.Y / 3.5),
+                Position = UDim2New(0.5, -Window.Size.X.Offset / 2, 0.5, -Window.Size.Y.Offset / 2),
                 Size = Window.Size,
                 Visible = false,
                 ZIndex = 2,
@@ -3214,8 +3218,8 @@ local Library do
         end)
 
         Library:Connect(UserInputService.InputChanged, function(Input)
-            if Input.UserInputType == Enum.UserInputType.MouseMovement and Slider.Sliding then
-                local SizeX = ((Input.Position.X - 1) - Items["RealSlider"].Instance.AbsolutePosition.X) / Items["RealSlider"].Instance.AbsoluteSize.X
+            if (Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch) and Slider.Sliding then
+                local SizeX = (Input.Position.X - Items["RealSlider"].Instance.AbsolutePosition.X) / Items["RealSlider"].Instance.AbsoluteSize.X
                 local Value = ((Slider.Max - Slider.Min) * SizeX) + Slider.Min
 
                 Slider:Set(MathClamp(Library:Round(Value, Slider.Decimals), Slider.Min, Slider.Max))
