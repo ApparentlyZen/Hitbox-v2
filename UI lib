@@ -201,7 +201,13 @@ local Library do
 
     for Index, Image in Library.Images do
         if not isfile(Library.Folders.Assets .. "/" .. Image[1]) then
-            writefile(Library.Folders.Assets .. "/" .. Image[1], game:HttpGet(Image[2]))
+            pcall(function()
+                local Success, Content = pcall(game.HttpGet, game, Image[2])
+                if Success then
+                    writefile(Library.Folders.Assets .. "/" .. Image[1], Content)
+                    task.wait(0.1) -- Petit délai pour éviter le rate limit
+                end
+            end)
         end
     end
 
@@ -479,7 +485,11 @@ local Library do
             end
 
             if not isfile(Library.Folders.Assets .. "/" .. Name .. ".ttf") then 
-                writefile(Library.Folders.Assets .. "/" .. Name .. ".ttf", game:HttpGet(Data.Url))
+                local Success, Content = pcall(game.HttpGet, game, Data.Url)
+                if Success then
+                    writefile(Library.Folders.Assets .. "/" .. Name .. ".ttf", Content)
+                    task.wait(0.1)
+                end
             end
 
             local FontData = {
