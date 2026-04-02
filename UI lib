@@ -201,13 +201,7 @@ local Library do
 
     for Index, Image in Library.Images do
         if not isfile(Library.Folders.Assets .. "/" .. Image[1]) then
-            pcall(function()
-                local Success, Content = pcall(game.HttpGet, game, Image[2])
-                if Success then
-                    writefile(Library.Folders.Assets .. "/" .. Image[1], Content)
-                    task.wait(0.1) -- Petit délai pour éviter le rate limit
-                end
-            end)
+            writefile(Library.Folders.Assets .. "/" .. Image[1], game:HttpGet(Image[2]))
         end
     end
 
@@ -485,11 +479,7 @@ local Library do
             end
 
             if not isfile(Library.Folders.Assets .. "/" .. Name .. ".ttf") then 
-                local Success, Content = pcall(game.HttpGet, game, Data.Url)
-                if Success then
-                    writefile(Library.Folders.Assets .. "/" .. Name .. ".ttf", Content)
-                    task.wait(0.1)
-                end
+                writefile(Library.Folders.Assets .. "/" .. Name .. ".ttf", game:HttpGet(Data.Url))
             end
 
             local FontData = {
@@ -1613,7 +1603,7 @@ local Library do
         end)
 
         Library:Connect(UserInputService.InputChanged, function(Input)
-            if Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch then
+            if Input.UserInputType == Enum.UserInputType.MouseMovement then
                 if SlidingPalette then 
                     Colorpicker:SlidePalette(Input)
                 elseif SlidingHue then 
@@ -1644,13 +1634,9 @@ local Library do
     Library.Window = function(self, Data)
         Data = Data or { }
 
-        local ScreenSize = Camera.ViewportSize
-        local DefaultWidth = math.min(681, ScreenSize.X * 0.9)
-        local DefaultHeight = math.min(480, ScreenSize.Y * 0.9)
-
         local Window = {
             Logo = Data.Logo or Data.logo or "123748867365417",
-            Size = Data.Size or Data.size or UDim2New(0, DefaultWidth, 0, DefaultHeight),
+            Size = Data.Size or Data.size or UDim2New(0.7, 0, 0.6, 0),
             FadeSpeed = Data.FadeSpeed or Data.fadespeed or 0.2,
             PagePadding = Data.PagePadding or Data.pagepadding or 19,
 
@@ -1665,15 +1651,26 @@ local Library do
             Items["MainFrame"] = Instances:Create("Frame", {
                 Parent = Library.Holder.Instance,
                 BorderColor3 = FromRGB(0, 0, 0),
-                AnchorPoint = Vector2New(0, 0),
+                AnchorPoint = Vector2New(0.5, 0.5),
                 Name = "\0",
-                Position = UDim2New(0.5, -Window.Size.X.Offset / 2, 0.5, -Window.Size.Y.Offset / 2),
+                Position = UDim2New(0.5, 0, 0.5, 0),
                 Size = Window.Size,
                 Visible = false,
                 ZIndex = 2,
                 BorderSizePixel = 0,
                 BackgroundColor3 = FromRGB(14, 14, 14)
-            })  Items["MainFrame"]:AddToTheme({BackgroundColor3 = "Background"})
+            }) Items["MainFrame"]:AddToTheme({BackgroundColor3 = "Background"})
+
+            Instances:Create("UIAspectRatioConstraint", {
+                Parent = Items["MainFrame"].Instance,
+                AspectRatio = 1.418,
+                AspectType = Enum.AspectType.ScaleWithParentSize
+            })
+
+            Instances:Create("UISizeConstraint", {
+                Parent = Items["MainFrame"].Instance,
+                MaxSize = Vector2New(600, 450)
+            })
 
             Items["MainFrame"]:MakeDraggable()
             Items["MainFrame"]:MakeResizeable(Vector2New(Window.Size.X.Offset, Window.Size.Y.Offset), Vector2New(9999, 9999))
@@ -1991,7 +1988,7 @@ local Library do
                     PlaceholderColor3 = FromRGB(175, 175, 175),
                     ZIndex = 2,
                     TextSize = 14,
-                    Size = UDim2New(0, 313, 0, 30),
+                    Size = UDim2New(0.8, 0, 0, 45),
                     TextColor3 = FromRGB(255, 255, 255),
                     BorderColor3 = FromRGB(0, 0, 0),
                     Text = "",
@@ -2456,7 +2453,7 @@ local Library do
                 Name = "\0",
                 BackgroundTransparency = 1,
                 BorderSizePixel = 0,
-                Size = UDim2New(1, 0, 0, 15),
+                Size = UDim2New(1, 0, 0, 45),
                 ZIndex = 4,
                 TextSize = 14,
                 BackgroundColor3 = FromRGB(255, 255, 255)
@@ -2890,7 +2887,7 @@ local Library do
                 AutoButtonColor = false,
                 Name = "\0",
                 BorderSizePixel = 0,
-                Size = UDim2New(1, 0, 0, 20),
+                Size = UDim2New(1, 0, 0, 45),
                 ZIndex = 4,
                 TextSize = 14,
                 BackgroundColor3 = FromRGB(11, 11, 11)
@@ -2945,13 +2942,13 @@ local Library do
                 BackgroundTransparency = 1,
                 Name = "\0",
                 BorderColor3 = FromRGB(0, 0, 0),
-                Size = UDim2New(1, 0, 0, 20),
+                Size = UDim2New(1, 0, 0, 45),
                 BorderSizePixel = 0,
                 BackgroundColor3 = FromRGB(255, 255, 255)
             })
 
             Items["Button"].Instance.Parent = ButtonHolder.Instance
-            Items["Button"].Instance.Size =  UDim2New(0.48, 1, 0, 20)
+            Items["Button"].Instance.Size =  UDim2New(0.48, 1, 0, 45)
 
             local SubItems = { } do
                 SubItems["SubButton"] = Instances:Create("TextButton", {
@@ -2965,7 +2962,7 @@ local Library do
                     BorderSizePixel = 0,
                     Name = "\0",
                     Position = UDim2New(1, 0, 0, 0),
-                    Size = UDim2New(0.48, 1, 0, 20),
+                    Size = UDim2New(0.48, 1, 0, 45),
                     ZIndex = 4,
                     TextSize = 14,
                     BackgroundColor3 = FromRGB(11, 11, 11)
@@ -3061,7 +3058,7 @@ local Library do
                 Parent = Slider.Section.Items["Content"].Instance,
                 Name = "\0",
                 BackgroundTransparency = 1,
-                Size = UDim2New(1, 0, 0, 28),
+                Size = UDim2New(1, 0, 0, 45),
                 BorderColor3 = FromRGB(0, 0, 0),
                 ZIndex = 4,
                 BorderSizePixel = 0,
@@ -3228,8 +3225,8 @@ local Library do
         end)
 
         Library:Connect(UserInputService.InputChanged, function(Input)
-            if (Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch) and Slider.Sliding then
-                local SizeX = (Input.Position.X - Items["RealSlider"].Instance.AbsolutePosition.X) / Items["RealSlider"].Instance.AbsoluteSize.X
+            if Input.UserInputType == Enum.UserInputType.MouseMovement and Slider.Sliding then
+                local SizeX = ((Input.Position.X - 1) - Items["RealSlider"].Instance.AbsolutePosition.X) / Items["RealSlider"].Instance.AbsoluteSize.X
                 local Value = ((Slider.Max - Slider.Min) * SizeX) + Slider.Min
 
                 Slider:Set(MathClamp(Library:Round(Value, Slider.Decimals), Slider.Min, Slider.Max))
@@ -3273,7 +3270,7 @@ local Library do
                 Parent = Dropdown.Section.Items["Content"].Instance,
                 Name = "\0",
                 BackgroundTransparency = 1,
-                Size = UDim2New(1, 0, 0, 42),
+                Size = UDim2New(1, 0, 0, 45),
                 BorderColor3 = FromRGB(0, 0, 0),
                 ZIndex = 4,
                 BorderSizePixel = 0,
@@ -3755,7 +3752,7 @@ local Library do
                 Parent = Keybind.Section.Items["Content"].Instance,
                 Name = "\0",
                 BackgroundTransparency = 1,
-                Size = UDim2New(1, 0, 0, 42),
+                Size = UDim2New(1, 0, 0, 45),
                 BorderColor3 = FromRGB(0, 0, 0),
                 ZIndex = 4,
                 BorderSizePixel = 0,
@@ -4017,7 +4014,7 @@ local Library do
                 Parent = Textbox.Section.Items["Content"].Instance,
                 Name = "\0",
                 BackgroundTransparency = 1,
-                Size = UDim2New(1, 0, 0, 42),
+                Size = UDim2New(1, 0, 0, 45),
                 BorderColor3 = FromRGB(0, 0, 0),
                 ZIndex = 4,
                 BorderSizePixel = 0,
