@@ -441,7 +441,7 @@ local Library do
             end)
 
             Library:Connect(UserInputService.InputChanged, function(Input)
-                if Input.UserInputType == Enum.UserInputType.MouseMovement and Resizing and not RawGui.Debounce then
+                if (Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch) and Resizing and not RawGui.Debounce then
 					ResizeMax = Maximum or Gui.Parent.AbsoluteSize - Gui.AbsoluteSize
 
 					Delta = Start + UDim2New(0, Input.Position.X, 0, Input.Position.Y)
@@ -956,9 +956,9 @@ local Library do
                 BorderSizePixel = 0,
                 Name = "\0",
                 Position = UDim2New(1, 0, 0.5, 0),
-                Size = UDim2New(0, 15, 0, 15),
+                Size = UDim2New(0, 40, 0, 40),
                 ZIndex = 4,
-                TextSize = 14,
+                TextSize = 16,
                 BackgroundColor3 = FromRGB(0, 181, 6)
             }) 
 
@@ -974,16 +974,16 @@ local Library do
             }):AddToTheme({Color = "Border"})
 
             local CalculateCount = function(Index)
-                local MaxButtonsAdded = 5
+                local MaxButtonsAdded = 3
 
                 local Column = Index % MaxButtonsAdded
             
                 local ButtonSize = Items["ColorpickerButton"].Instance.AbsoluteSize
-                local Spacing = 4
+                local Spacing = 8
             
                 local XPosition = (ButtonSize.X + Spacing) * Column - Spacing - ButtonSize.X
             
-                Items["ColorpickerButton"].Instance.Position = UDim2New(1, Data.IsToggle and -XPosition - 20 or -XPosition, 0.5, 0)
+                Items["ColorpickerButton"].Instance.Position = UDim2New(1, Data.IsToggle and -XPosition - 45 or -XPosition, 0.5, 0)
             end
 
             CalculateCount(Data.Count)
@@ -1273,9 +1273,9 @@ local Library do
                 TextXAlignment = Enum.TextXAlignment.Left,
                 BorderSizePixel = 0,
                 ZIndex = 4,
-                TextSize = 14,
+                TextSize = 16,
                 BackgroundColor3 = FromRGB(255, 255, 255)
-            })  Items["Text"]:AddToTheme({TextColor3 = "Text"})
+            })  Items["Text"]:AddToTheme({TextColor3 = "Text"}) Items["Text"].Instance.TextScaled = true
 
             Items["Indicator"] = Instances:Create("Frame", {
                 Parent = Items["RainbowToggle"].Instance,
@@ -1283,7 +1283,7 @@ local Library do
                 AnchorPoint = Vector2New(1, 0.5),
                 Name = "\0",
                 Position = UDim2New(1, 0, 0.5, 0),
-                Size = UDim2New(0, 15, 0, 15),
+                Size = UDim2New(0, 30, 0, 30),
                 ZIndex = 5,
                 BorderSizePixel = 0,
                 BackgroundColor3 = FromRGB(11, 11, 11)
@@ -1603,7 +1603,7 @@ local Library do
         end)
 
         Library:Connect(UserInputService.InputChanged, function(Input)
-            if Input.UserInputType == Enum.UserInputType.MouseMovement then
+            if Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch then
                 if SlidingPalette then 
                     Colorpicker:SlidePalette(Input)
                 elseif SlidingHue then 
@@ -1636,7 +1636,7 @@ local Library do
 
         local Window = {
             Logo = Data.Logo or Data.logo or "123748867365417",
-            Size = Data.Size or Data.size or UDim2New(0.7, 0, 0.6, 0),
+            Size = Data.Size or Data.size or UDim2New(0.8, 0, 0.7, 0),
             FadeSpeed = Data.FadeSpeed or Data.fadespeed or 0.2,
             PagePadding = Data.PagePadding or Data.pagepadding or 19,
 
@@ -1651,7 +1651,7 @@ local Library do
             Items["MainFrame"] = Instances:Create("Frame", {
                 Parent = Library.Holder.Instance,
                 BorderColor3 = FromRGB(0, 0, 0),
-                AnchorPoint = Vector2New(0.5, 0.5),
+                AnchorPoint = Vector2.new(0.5, 0.5),
                 Name = "\0",
                 Position = UDim2New(0.5, 0, 0.5, 0),
                 Size = Window.Size,
@@ -1663,7 +1663,7 @@ local Library do
 
             Instances:Create("UIAspectRatioConstraint", {
                 Parent = Items["MainFrame"].Instance,
-                AspectRatio = 1.418,
+                AspectRatio = 1.6,
                 AspectType = Enum.AspectType.ScaleWithParentSize
             })
 
@@ -1673,7 +1673,7 @@ local Library do
             })
 
             Items["MainFrame"]:MakeDraggable()
-            Items["MainFrame"]:MakeResizeable(Vector2New(Window.Size.X.Offset, Window.Size.Y.Offset), Vector2New(9999, 9999))
+            Items["MainFrame"]:MakeResizeable(Vector2New(400, 300), Vector2New(9999, 9999))
 
             Items["Shadow"] = Instances:Create("ImageLabel", {
                 Parent = Items["MainFrame"].Instance,
@@ -1916,7 +1916,7 @@ local Library do
                 Name = "\0",
                 Image = "rbxassetid://" .. Page.Icon,
                 BackgroundTransparency = 1,
-                Size = UDim2New(0, 25, 0, 25),
+                Size = UDim2New(0, 35, 0, 35),
                 ZIndex = 2,
                 BorderSizePixel = 0,
                 BackgroundColor3 = FromRGB(255, 255, 255)
@@ -1940,7 +1940,9 @@ local Library do
                 Name = "\0",
                 BackgroundTransparency = 1,
                 Position = UDim2New(0, 15, 0, 15),
-                Size = UDim2New(1, -30, 0, 24),
+                Size = UDim2New(1, -30, 0, 45),
+                Position = UDim2New(0, 15, 0, 15),
+                Size = UDim2New(1, -30, 0, 45),
                 ZIndex = 2,
                 BorderSizePixel = 0,
                 BackgroundColor3 = FromRGB(255, 255, 255)
@@ -2366,14 +2368,14 @@ local Library do
                 Text = Section.Name,
                 Name = "\0",
                 BorderSizePixel = 0,
-                Size = UDim2New(1, 0, 0, 15),
+                Size = UDim2New(1, 0, 0, 30),
                 BackgroundTransparency = 1,
                 TextXAlignment = Enum.TextXAlignment.Left,
                 Position = UDim2New(0, 7, 0, 6),
                 ZIndex = 4,
-                TextSize = 14,
+                TextSize = 16,
                 BackgroundColor3 = FromRGB(255, 255, 255)
-            })  Items["Text"]:AddToTheme({TextColor3 = "Text"})
+            })  Items["Text"]:AddToTheme({TextColor3 = "Text"}) Items["Text"].Instance.TextScaled = true
 
             Instances:Create("Frame", {
                 Parent = Items["Section"].Instance,
@@ -2465,7 +2467,7 @@ local Library do
                 AnchorPoint = Vector2New(1, 0.5),
                 Name = "\0",
                 Position = UDim2New(1, 0, 0.5, 0),
-                Size = UDim2New(0, 15, 0, 15),
+                Size = UDim2New(0, 35, 0, 35),
                 ZIndex = 5,
                 BorderSizePixel = 0,
                 BackgroundColor3 = FromRGB(11, 11, 11)
@@ -2532,9 +2534,9 @@ local Library do
                 TextXAlignment = Enum.TextXAlignment.Left,
                 BorderSizePixel = 0,
                 ZIndex = 4,
-                TextSize = 14,
+                TextSize = 16,
                 BackgroundColor3 = FromRGB(255, 255, 255)
-            })  Items["Text"]:AddToTheme({TextColor3 = "Text"})
+            })  Items["Text"]:AddToTheme({TextColor3 = "Text"}) Items["Text"].Instance.TextScaled = true
         end
 
         function Toggle:Get()
@@ -3149,7 +3151,7 @@ local Library do
                 BorderSizePixel = 0,
                 Name = "\0",
                 Position = UDim2New(1, -8, 0.5, 0),
-                Size = UDim2New(0, 15, 0, 15),
+                Size = UDim2New(0, 30, 0, 30),
                 ZIndex = 5,
                 TextSize = 14,
                 BackgroundColor3 = FromRGB(181, 116, 16)
@@ -3225,7 +3227,7 @@ local Library do
         end)
 
         Library:Connect(UserInputService.InputChanged, function(Input)
-            if Input.UserInputType == Enum.UserInputType.MouseMovement and Slider.Sliding then
+            if (Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch) and Slider.Sliding then
                 local SizeX = ((Input.Position.X - 1) - Items["RealSlider"].Instance.AbsolutePosition.X) / Items["RealSlider"].Instance.AbsoluteSize.X
                 local Value = ((Slider.Max - Slider.Min) * SizeX) + Slider.Min
 
@@ -3347,7 +3349,7 @@ local Library do
                 AnchorPoint = Vector2New(0, 1),
                 Name = "\0",
                 Position = UDim2New(0, 0, 1, 0),
-                Size = UDim2New(1, 0, 0, 21),
+                Size = UDim2New(1, 0, 0, 40),
                 ZIndex = 4,
                 BorderSizePixel = 0,
                 BackgroundColor3 = FromRGB(11, 11, 11)
@@ -3516,7 +3518,7 @@ local Library do
                 Name = "\0",
                 AutoButtonColor = false,
                 BorderColor3 = FromRGB(0, 0, 0),
-                Size = UDim2New(1, -5, 0, 20),
+                Size = UDim2New(1, -5, 0, 40),
                 BackgroundTransparency = 1,
                 TextXAlignment = Enum.TextXAlignment.Left,
                 BorderSizePixel = 0,
@@ -3665,7 +3667,7 @@ local Library do
                 Parent = Label.Section.Items["Content"].Instance,
                 Name = "\0",
                 BackgroundTransparency = 1,
-                Size = UDim2New(1, 0, 0, 15),
+                Size = UDim2New(1, 0, 0, 30),
                 BorderColor3 = FromRGB(0, 0, 0),
                 ZIndex = 4,
                 BorderSizePixel = 0,
@@ -3684,9 +3686,9 @@ local Library do
                 TextXAlignment = Enum.TextXAlignment[Label.Alignment],
                 Size = UDim2New(1, 0, 0, 15),
                 ZIndex = 4,
-                TextSize = 14,
+                TextSize = 16,
                 BackgroundColor3 = FromRGB(255, 255, 255)
-            })  Items["Text"]:AddToTheme({TextColor3 = "Text"})
+            })  Items["Text"]:AddToTheme({TextColor3 = "Text"}) Items["Text"].Instance.TextScaled = true
         end
 
         function Label:Colorpicker(Data)
@@ -3783,7 +3785,7 @@ local Library do
                 AnchorPoint = Vector2New(0, 1),
                 Name = "\0",
                 Position = UDim2New(0, 0, 1, 0),
-                Size = UDim2New(1, 0, 0, 21),
+                Size = UDim2New(1, 0, 0, 40),
                 ZIndex = 4,
                 BorderSizePixel = 0,
                 BackgroundColor3 = FromRGB(11, 11, 11)
@@ -4045,7 +4047,7 @@ local Library do
                 BorderColor3 = FromRGB(0, 0, 0),
                 Text = "",
                 ZIndex = 4,
-                Size = UDim2New(1, 0, 0, 21),
+                Size = UDim2New(1, 0, 0, 40),
                 AnchorPoint = Vector2New(0, 1),
                 Position = UDim2New(0, 0, 1, 0),
                 Name = "\0",
