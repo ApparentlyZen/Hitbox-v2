@@ -291,6 +291,7 @@ Fatality.Colors = {
 	Black = Color3.fromRGB(16, 16, 16),
 	Main = Color3.fromRGB(255, 106, 133)
 };
+Fatality.ThemeObjects = {};
 Fatality.DragBlacklist = {};
 Fatality.Version = '1.6';
 Fatality.Lucide = {
@@ -1161,6 +1162,27 @@ end;
 function Fatality:GetIcon(name : string) : string
 	return Fatality.Lucide['lucide-'..tostring(name)] or Fatality.Lucide[name] or Fatality.Lucide[tostring(name)] or "";
 end;
+
+function Fatality:RegisterThemeObject(Object: Instance, Property: string)
+	table.insert(Fatality.ThemeObjects, {Object = Object, Property = Property})
+	if Object:IsA("GuiObject") or Object:IsA("LayerCollector") then
+		Object.Destroying:Connect(function()
+			for i, v in next, Fatality.ThemeObjects do
+				if v.Object == Object then
+					table.remove(Fatality.ThemeObjects, i)
+					break
+				end
+			end
+		end)
+	end
+end
+
+function Fatality:SetAccentColor(Color: Color3)
+	Fatality.Colors.Main = Color
+	for _, Data in next, Fatality.ThemeObjects do
+		pcall(function() Data.Object[Data.Property] = Color end)
+	end
+end
 
 function Fatality:SetIcon(name : string, value : string)
 	Fatality.Lucide[name] = value;
@@ -2245,9 +2267,9 @@ function Fatality:CreateDropdown(Parent: Frame, Default: string | {[string]: boo
 		db_selected.Size = UDim2.new(1, 0, 0, 10)
 		db_selected.ZIndex = 110
 		db_selected.FontFace = Fatality.FontSemiBold
-		db_selected.TextColor3 = Fatality.Colors.Main
 		db_selected.TextSize = 12.000
 		db_selected.TextXAlignment = Enum.TextXAlignment.Left
+		Fatality:RegisterThemeObject(db_selected, "TextColor3")
 
 		return db_selected;
 	end;
@@ -2282,7 +2304,7 @@ function Fatality:CreateDropdown(Parent: Frame, Default: string | {[string]: boo
 				if Multiplier then
 					if (typeof(Default) == 'table' and (Default[v] or table.find(Default,v))) or Default == v then
 						Selected[v] = true
-						bth.TextColor3 = Fatality.Colors.Main;
+						bth.TextColor3 = Fatality.Colors.Main
 					else
 						bth.TextColor3 = Color3.fromRGB(255, 255, 255);
 						Selected[v] = false
@@ -2304,7 +2326,7 @@ function Fatality:CreateDropdown(Parent: Frame, Default: string | {[string]: boo
 						selectedmem = bth;
 						Selected = v;
 
-						bth.TextColor3 = Fatality.Colors.Main;
+						bth.TextColor3 = Fatality.Colors.Main
 					else
 						bth.TextColor3 = Color3.fromRGB(255, 255, 255);
 					end;
@@ -2360,6 +2382,8 @@ function Fatality:CreateElements(Parent : Frame , ZIndex : number , Event : Bind
 		Config.Option = Config.Option or false;
 		Config.Callback = Config.Callback or function(bool) end;
 		Config.Flag = Config.Flag or nil;
+		
+		local CurrentColor = Fatality.Colors.Main;
 
 		local Toggle = Instance.new("Frame")
 		local Toggle_Name = Instance.new("TextLabel")
@@ -2426,7 +2450,8 @@ function Fatality:CreateElements(Parent : Frame , ZIndex : number , Event : Bind
 		ValueIcon.Size = UDim2.new(0.699999988, 0, 0.699999988, 0)
 		ValueIcon.ZIndex = ZIndex + 2
 		ValueIcon.Image = "rbxassetid://10709790644"
-		ValueIcon.ImageTransparency = 1;
+		ValueIcon.ImageTransparency = 1
+		Fatality:RegisterThemeObject(ValueIcon, "ImageColor3")
 
 		OptionButton.Name = Fatality:RandomString()
 		OptionButton.Parent = Toggle
@@ -2447,7 +2472,6 @@ function Fatality:CreateElements(Parent : Frame , ZIndex : number , Event : Bind
 			if value then
 				Fatality:CreateAnimation(ValueIcon,0.45,{
 					ImageTransparency = 0,
-					ImageColor3 = Fatality.Colors.Main,
 					Size = UDim2.new(0.8, 0, 0.8, 0),
 					Rotation = 0,
 				})
@@ -2653,6 +2677,7 @@ function Fatality:CreateElements(Parent : Frame , ZIndex : number , Event : Bind
 		boxli.BorderSizePixel = 0
 		boxli.Size = UDim2.new((Config.Default - Config.Min) / (Config.Max - Config.Min), 0, 1, 0)
 		boxli.ZIndex = ZIndex + 3
+		Fatality:RegisterThemeObject(boxli, "BackgroundColor3")
 
 		UICorner_2.CornerRadius = UDim.new(0, 2)
 		UICorner_2.Parent = boxli
@@ -3844,8 +3869,8 @@ function Fatality:CreateConfigWindow(Root: ScreenGui , Fatal , Button: ImageButt
 	DeleteButton.Size = UDim2.new(0, 15, 0, 15)
 	DeleteButton.ZIndex = 209
 	DeleteButton.Image = "rbxassetid://10747362393"
-	DeleteButton.ImageColor3 = Fatality.Colors.Main
 	DeleteButton.ImageTransparency = 0.250
+		Fatality:RegisterThemeObject(DeleteButton, "ImageColor3")
 
 	UICorner_7.CornerRadius = UDim.new(1, 0)
 	UICorner_7.Parent = DeleteButton
@@ -4132,6 +4157,70 @@ function Fatality:CreateConfigWindow(Root: ScreenGui , Fatal , Button: ImageButt
 		end,
 	});
 
+	function Fatal:AddSaveManager(Tab)
+		local Section = Tab:AddSection({Name = "Save Manager", Position = "Left"})
+		local ConfigInput = Section:AddToggle({Name = "Config Name (Use Input below)", Default = false})
+		local ConfigList = Section:AddListBox({Name = "Configurations", Values = {}, Multi = false})
+		
+		local ConfigName = ""
+		local ConfigWindow = Fatal:AddConfig()
+		ConfigWindow:Init(Window.Name, "NamelessClient")
+
+		local function Refresh()
+			ConfigWindow:ReloadConfig()
+			local Files = {}
+			for _, v in next, listfiles(ConfigWindow.ConfigDirectory) do
+				local spl = string.split(v, "/")
+				table.insert(Files, spl[#spl])
+			end
+			ConfigList:SetValues(Files)
+			ConfigList:Refresh()
+		end
+
+		Section:AddButton({Name = "Refresh List", Callback = Refresh})
+		Section:AddButton({Name = "Create/Overwrite Config", Callback = function()
+			local Name = ConfigName ~= "" and ConfigName or "Default"
+			local flags = Fatal:GetFlagConfig()
+			ConfigWindow:SaveConfig(Name, game:GetService("HttpService"):JSONEncode(flags))
+			Refresh()
+		end})
+		Section:AddButton({Name = "Load Selected", Callback = function()
+			local Selected = ConfigList:GetValue()
+			if Selected then ConfigWindow:LoadConfig(Selected) end
+		end})
+		Section:AddButton({Name = "Delete Selected", Callback = function()
+			local Selected = ConfigList:GetValue()
+			if Selected then 
+				ConfigWindow:DeleteConfig(Selected)
+				Refresh()
+			end
+		end})
+
+		-- Link input to a dummy toggle or textbox if you add one later
+		-- Pour l'instant on utilise le ConfigWindow:Init original en arriere plan
+		Refresh()
+	end
+
+	function Fatal:AddThemeManager(Tab)
+		local Section = Tab:AddSection({Name = "Theme Manager", Position = "Right"})
+		
+		Section:AddColorPicker({
+			Name = "Accent Color",
+			Default = Fatality.Colors.Main,
+			Callback = function(color)
+				Fatality:SetAccentColor(color)
+			end
+		})
+
+		Section:AddButton({Name = "Reset Theme", Callback = function()
+			Fatality:SetAccentColor(Color3.fromRGB(255, 106, 133))
+		end})
+		
+		Section:AddButton({Name = "Refresh UI Sync", Callback = function()
+			Fatality:SetAccentColor(Fatality.Colors.Main)
+		end})
+	end
+
 	return res;
 end;
 
@@ -4192,6 +4281,7 @@ function Fatality.new(Window: Window)
 	local SaveButton = Instance.new("ImageButton")
 	local HideButton = Instance.new("ImageButton")
 
+	Fatality:RegisterThemeObject(HeaderText, "TextStrokeColor3")
 	Fatality.WindowFlags[Fatalitywin] = {};
 
 	Fatality:ScrollSignal(tbc,UIListLayout,'X');
@@ -4544,6 +4634,7 @@ function Fatality.new(Window: Window)
 	UIStroke.Thickness = 2.500
 	UIStroke.Transparency = 0.900
 	UIStroke.Parent = UserIcon
+	Fatality:RegisterThemeObject(UIStroke, "Color")
 
 	User_name.Name = Fatality:RandomString()
 	User_name.Parent = UserProfle
@@ -4573,12 +4664,13 @@ function Fatality.new(Window: Window)
 	expire_days.Size = UDim2.new(0, 200, 0, 15)
 	expire_days.ZIndex = 4
 	expire_days.Font = Enum.Font.GothamMedium
-	expire_days.Text = string.format("<font transparency=\"0.5\">expires:</font> <font color=\"#f53174\">%s</font>",Window.Expire)
+	expire_days.Text = string.format("<font transparency=\"0.5\">expires:</font> <font color=\"#%s\">%s</font>", Fatality.Colors.Main:ToHex(), Window.Expire)
 	expire_days.TextColor3 = Color3.fromRGB(255, 255, 255)
 	expire_days.TextSize = 12.000
 	expire_days.TextStrokeTransparency = 0.700
 	expire_days.TextXAlignment = Enum.TextXAlignment.Right
 	expire_days.RichText = true;
+	Fatality:RegisterThemeObject(expire_days, "TextColor3")
 
 	HeaderLineShadow.Name = Fatality:RandomString()
 	HeaderLineShadow.Parent = Header
@@ -4663,7 +4755,7 @@ function Fatality.new(Window: Window)
 	end;
 
 	function Fatal:SetExpire(str: string)
-		expire_days.Text = string.format("<font transparency=\"0.5\">expires:</font> <font color=\"#f53174\">%s</font>",str)
+		expire_days.Text = string.format("<font transparency=\"0.5\">expires:</font> <font color=\"#%s\">%s</font>", Fatality.Colors.Main:ToHex(), str)
 	end;
 
 	function Fatal:GetFlags()
@@ -4835,7 +4927,8 @@ function Fatality.new(Window: Window)
 		Icon.SizeConstraint = Enum.SizeConstraint.RelativeYY
 		Icon.ZIndex = 5
 		Icon.Image = Fatality:GetIcon(Menu.Icon);
-		Icon.ImageColor3 = Fatality.Colors.Main
+		Icon.ImageColor3 = (Fatal.MenuSelected and Fatal.MenuSelected.Root == MenuLiber and Fatality.Colors.Main) or Color3.fromRGB(255,255,255)
+		Fatality:RegisterThemeObject(Icon, "ImageColor3")
 		Icon.ScaleType = Enum.ScaleType.Crop
 
 		UICorner_2.CornerRadius = UDim.new(1, 0)
@@ -5018,8 +5111,7 @@ function Fatality.new(Window: Window)
 				MenuLiber.Visible = true;
 
 				Fatality:CreateAnimation(Icon,0.5,{
-					ImageTransparency = 0.15,
-					ImageColor3 = Fatality.Colors.Main
+					ImageTransparency = 0.15
 				});
 
 				Fatality:CreateAnimation(menu_name,0.5,{
@@ -5039,8 +5131,7 @@ function Fatality.new(Window: Window)
 				MenuLiber.Visible = false;
 
 				Fatality:CreateAnimation(Icon,0.5,{
-					ImageTransparency = 0.5,
-					ImageColor3 = Color3.fromRGB(255, 255, 255)
+					ImageTransparency = 0.5
 				});
 
 				Fatality:CreateAnimation(MenuButton,0.5,{
@@ -5074,7 +5165,6 @@ function Fatality.new(Window: Window)
 				if bool then
 					Fatality:CreateAnimation(Icon,0.5,{
 						ImageTransparency = 0.2,
-						ImageColor3 = Color3.fromRGB(255, 255, 255)
 					});
 
 					Fatality:CreateAnimation(MenuButton,0.5,{
@@ -5087,7 +5177,6 @@ function Fatality.new(Window: Window)
 				else
 					Fatality:CreateAnimation(Icon,0.5,{
 						ImageTransparency = 0.5,
-						ImageColor3 = Color3.fromRGB(255, 255, 255)
 					});
 
 					Fatality:CreateAnimation(MenuButton,0.5,{
@@ -5410,10 +5499,10 @@ function Fatality.new(Window: Window)
 				db_selected.Size = UDim2.new(1, 0, 0, 10)
 				db_selected.ZIndex = 15
 				db_selected.FontFace = Fatality.FontSemiBold
-				db_selected.TextColor3 = Fatality.Colors.Main
 				db_selected.TextSize = 12.000
 				db_selected.TextTransparency = 0.5;
 				db_selected.TextXAlignment = Enum.TextXAlignment.Left
+				Fatality:RegisterThemeObject(db_selected, "TextColor3")
 
 				return db_selected;
 			end;
@@ -5598,7 +5687,7 @@ function Fatality.new(Window: Window)
 								Config.Default[v] = not Config.Default[v];
 
 								if Config.Default[v] then
-									bth.TextColor3 = Fatality.Colors.Main;
+									bth.TextColor3 = Fatality.Colors.Main
 									bth.TextTransparency = 0;
 
 								else
@@ -5613,7 +5702,7 @@ function Fatality.new(Window: Window)
 								selectedmem = bth;
 								Config.Default = v;
 
-								bth.TextColor3 = Fatality.Colors.Main;
+								bth.TextColor3 = Fatality.Colors.Main
 								bth.TextTransparency = 0;
 
 							else
@@ -5642,7 +5731,7 @@ function Fatality.new(Window: Window)
 								end;
 
 								bth.TextTransparency = 0;
-								bth.TextColor3 = Fatality.Colors.Main;
+								bth.TextColor3 = Fatality.Colors.Main
 								selectedmem = bth;
 								Config.Default = v;
 
@@ -6411,6 +6500,7 @@ function Fatality.new(Window: Window)
 			Stroke.Thickness = 2
 
 			Fatality:Drag(MobileToggle, MobileToggle, 0.1)
+			Fatality:RegisterThemeObject(Stroke, "Color")
 			protect_gui(MobileGui)
 		end)
 	end
