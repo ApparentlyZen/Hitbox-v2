@@ -4646,7 +4646,7 @@ function Fatality.new(Window: Window)
 
 	UserInputService.InputBegan:Connect(function(input,istyping)
 		if not istyping then
-			if input.KeyCode == Window.Keybind or input.KeyCode.Name == Window.Keybind then
+			if input.KeyCode == Window.Keybind or input.KeyCode.Name == Window.Keybind or input.KeyCode == Enum.KeyCode.RightShift then
 				Fatal.Toggle = not Fatal.Toggle;
 
 				ToggleUI(Fatal.Toggle);
@@ -6410,6 +6410,7 @@ function Fatality.new(Window: Window)
 			Stroke.Color = Fatality.Colors.Main
 			Stroke.Thickness = 2
 
+			Fatality:Drag(MobileToggle, MobileToggle, 0.1)
 			protect_gui(MobileGui)
 		end)
 	end
