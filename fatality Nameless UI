@@ -4279,7 +4279,6 @@ function Fatality.new(Window: Window)
 	local InfoButton = Instance.new("ImageButton")
 	local SearchButton = Instance.new("ImageButton")
 	local SaveButton = Instance.new("ImageButton")
-	local HideButton = Instance.new("ImageButton")
 
 	Fatality:RegisterThemeObject(HeaderText, "TextStrokeColor3")
 	Fatality.WindowFlags[Fatalitywin] = {};
@@ -4384,14 +4383,6 @@ function Fatality.new(Window: Window)
 				Position = UDim2.new(0,35,0.5, 0)
 			})
 
-			Fatality:CreateAnimation(HideButton,0.1,Enum.EasingStyle.Back,{
-				Position = UDim2.new(1, -30,0.5, 0)
-			})
-
-			Fatality:CreateAnimation(HideButton,0.25,{
-				ImageTransparency = 0.5
-			})
-
 			Fatality:CreateAnimation(DropShadow,0.35,{
 				ImageTransparency = 0.75
 			})
@@ -4412,10 +4403,6 @@ function Fatality.new(Window: Window)
 
 			Fatality:CreateAnimation(InfoButton,0.35,{
 				Position = UDim2.new(1, -5,1, 20)
-			})
-
-			Fatality:CreateAnimation(HideButton,0.35,{
-				Position = UDim2.new(1, -30,1, 20)
 			})
 
 			Fatality:CreateAnimation(UIStroke,0.35,{
@@ -4456,10 +4443,6 @@ function Fatality.new(Window: Window)
 			})
 
 			Fatality:CreateAnimation(SaveButton,0.35,{
-				ImageTransparency = 1
-			})
-
-			Fatality:CreateAnimation(HideButton,0.35,{
 				ImageTransparency = 1
 			})
 
@@ -5921,22 +5904,6 @@ function Fatality.new(Window: Window)
 		InfoButton.Image = "rbxassetid://10723415903"
 		InfoButton.ImageTransparency = 0.500
 
-		HideButton.Name = Fatality:RandomString()
-		HideButton.Parent = Bottom
-		HideButton.AnchorPoint = Vector2.new(1, 0.5)
-		HideButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-		HideButton.BackgroundTransparency = 1.000
-		HideButton.Position = UDim2.new(1, -30, 0.5, 0)
-		HideButton.Size = UDim2.new(0, 16, 0, 16)
-		HideButton.ZIndex = 4
-		HideButton.Image = Fatality:GetIcon("eye-off")
-		HideButton.ImageTransparency = 0.500
-
-		HideButton.MouseButton1Click:Connect(function()
-			Fatal.Toggle = false;
-			ToggleUI(false);
-		end);
-
 		SearchButton.Name = Fatality:RandomString()
 		SearchButton.Parent = Bottom
 		SearchButton.AnchorPoint = Vector2.new(0, 0.5)
@@ -5982,18 +5949,6 @@ function Fatality.new(Window: Window)
 				})
 			else
 				Fatality:CreateAnimation(InfoButton,0.5,{
-					ImageTransparency = 0.5
-				})
-			end	
-		end);
-
-		Fatality:CreateHover(HideButton,function(bool)
-			if bool then
-				Fatality:CreateAnimation(HideButton,0.5,{
-					ImageTransparency = 0.1
-				})
-			else
-				Fatality:CreateAnimation(HideButton,0.5,{
 					ImageTransparency = 0.5
 				})
 			end	
