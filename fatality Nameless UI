@@ -1201,7 +1201,7 @@ function Fatality:CreateAnimation(Instance: Instance , Time: number , Style : En
 		end;
 	end;
 
-	local Tween: Tween = TweenService:Create(Instance,TweenInfo.new(Time or 1 , Style or Enum.EasingStyle.Quint),Property);
+	local Tween: Tween = TweenService:Create(Instance,TweenInfo.new(Time or 0.3 , Style or Enum.EasingStyle.Quart, Enum.EasingDirection.Out),Property);
 
 	Tween:Play();
 
@@ -1233,7 +1233,7 @@ function Fatality:Drag(InputFrame: Frame, MoveFrame: Frame, Speed : number)
 		local position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
 			startPos.Y.Scale, startPos.Y.Offset + delta.Y);
 
-		Fatality:CreateAnimation(MoveFrame,Speed,nil,{
+		Fatality:CreateAnimation(MoveFrame, Speed, Enum.EasingStyle.Sine, {
 			Position = position
 		});
 	end;
@@ -1303,11 +1303,11 @@ end;
 function Fatality:CreateOption(OptionButton: ImageButton): Elements
 	Fatality:CreateHover(OptionButton,function(bool)
 		if bool then
-			Fatality:CreateAnimation(OptionButton,0.5,{
+			Fatality:CreateAnimation(OptionButton,0.2,{
 				ImageTransparency = 0.3
 			})
 		else
-			Fatality:CreateAnimation(OptionButton,0.5,{
+			Fatality:CreateAnimation(OptionButton,0.2,{
 				ImageTransparency = 0.600
 			})
 		end;
@@ -1392,17 +1392,17 @@ function Fatality:CreateOption(OptionButton: ImageButton): Elements
 
 			local size = math.clamp(UIListLayout.AbsoluteContentSize.Y + 15,0,200)
 
-			ExtElementFrame.Position = UDim2.fromOffset(OptionButton.AbsolutePosition.X + 100, OptionButton.AbsolutePosition.Y + (size / 2))
+			ExtElementFrame.Position = UDim2.fromOffset(OptionButton.AbsolutePosition.X + 110, OptionButton.AbsolutePosition.Y)
 
-			Fatality:CreateAnimation(ExtElementFrame,0.45,{
+			Fatality:CreateAnimation(ExtElementFrame,0.3,{
 				Size = UDim2.new(0, 200, 0, size)
 			})
 
-			Fatality:CreateAnimation(DropShadow,0.45,{
+			Fatality:CreateAnimation(DropShadow,0.3,{
 				ImageTransparency = 0.750
 			})
 
-			Fatality:CreateAnimation(UIStroke,0.45,{
+			Fatality:CreateAnimation(UIStroke,0.3,{
 				Transparency = 0
 			})
 
@@ -1414,9 +1414,9 @@ function Fatality:CreateOption(OptionButton: ImageButton): Elements
 			SPAWN_THREAD = task.spawn(function()
 				while true do task.wait(0.1)
 					local size = math.clamp(UIListLayout.AbsoluteContentSize.Y + 15,0,200)
-					local ud = UDim2.fromOffset(OptionButton.AbsolutePosition.X + 100, OptionButton.AbsolutePosition.Y + (size / 2));
+					local ud = UDim2.fromOffset(OptionButton.AbsolutePosition.X + 110, OptionButton.AbsolutePosition.Y);
 
-					Fatality:CreateAnimation(ExtElementFrame,0.35,{
+					Fatality:CreateAnimation(ExtElementFrame,0.2,{
 						Position = ud
 					});
 				end;
@@ -1430,15 +1430,15 @@ function Fatality:CreateOption(OptionButton: ImageButton): Elements
 			Bindable:SetAttribute('V',false);
 			Bindable:Fire(false);
 
-			Fatality:CreateAnimation(ExtElementFrame,0.45,{
+			Fatality:CreateAnimation(ExtElementFrame,0.25,{
 				Size = UDim2.new(0, 200, 0, 0)
 			})
 
-			Fatality:CreateAnimation(DropShadow,0.45,{
+			Fatality:CreateAnimation(DropShadow,0.25,{
 				ImageTransparency = 1
 			})
 
-			Fatality:CreateAnimation(UIStroke,0.45,{
+			Fatality:CreateAnimation(UIStroke,0.25,{
 				Transparency = 1
 			})
 		end;
@@ -1528,90 +1528,90 @@ function Fatality:CreateColorPicker(ColorBox: Frame,Transparency, Callback)
 
 			UI_SPAWN_THREAD = task.spawn(function()
 				while true do task.wait()
-					Fatality:CreateAnimation(ColorPickerFrame,0.35,{
+					Fatality:CreateAnimation(ColorPickerFrame,0.2,{
 						Position = UDim2.fromOffset(ColorBox.AbsolutePosition.X + (ColorPickerFrame.AbsoluteSize.X / 1.5),ColorBox.AbsolutePosition.Y);
 					});
 				end;
 			end);
 
-			Fatality:CreateAnimation(ColorRGBSlide,0.35,{
+			Fatality:CreateAnimation(ColorRGBSlide,0.2,{
 				Position = UDim2.new(0.5, 0, OldCode, 0)
 			});
 
-			Fatality:CreateAnimation(MouseMovement,0.35,{
+			Fatality:CreateAnimation(MouseMovement,0.2,{
 				Position = UDim2.new(CodeH, 0, 1 - CodeV, 0)
 			})
 
-			Fatality:CreateAnimation(ColorOptSlide,0.35,{
+			Fatality:CreateAnimation(ColorOptSlide,0.2,{
 				Position = UDim2.new(1- Transparency, 0, 0.5, 0)
 			})
 
-			Fatality:CreateAnimation(ColorPickerFrame,0.45,{
+			Fatality:CreateAnimation(ColorPickerFrame,0.3,{
 				Size = UDim2.new(0, 175, 0, 195),
 			});
 
-			Fatality:CreateAnimation(UIStroke,0.45,{
+			Fatality:CreateAnimation(UIStroke,0.3,{
 				Transparency = 0
 			});
 
-			Fatality:CreateAnimation(DropShadow,0.45,{
+			Fatality:CreateAnimation(DropShadow,0.3,{
 				ImageTransparency = 0.75
 			});
 
-			Fatality:CreateAnimation(ColorPickBox,0.45,{
+			Fatality:CreateAnimation(ColorPickBox,0.3,{
 				ImageTransparency = 0,
 				BackgroundTransparency = 0
 			});
 
-			Fatality:CreateAnimation(MouseMovement,0.45,{
+			Fatality:CreateAnimation(MouseMovement,0.3,{
 				ImageTransparency = 0,
 			});
 
-			Fatality:CreateAnimation(UIStroke_2,0.45,{
+			Fatality:CreateAnimation(UIStroke_2,0.3,{
 				Transparency = 0
 			});
 
-			Fatality:CreateAnimation(ColorRedGreenBlue,0.45,{
+			Fatality:CreateAnimation(ColorRedGreenBlue,0.3,{
 				BackgroundTransparency = 0
 			});
 
-			Fatality:CreateAnimation(ColorRGBSlide,0.45,{
+			Fatality:CreateAnimation(ColorRGBSlide,0.3,{
 				BackgroundTransparency = 0
 			});
 
-			Fatality:CreateAnimation(UIStroke_3,0.45,{
+			Fatality:CreateAnimation(UIStroke_3,0.3,{
 				Transparency = 0.75
 			});
 
-			Fatality:CreateAnimation(ColorOpc,0.45,{
+			Fatality:CreateAnimation(ColorOpc,0.3,{
 				BackgroundTransparency = 0
 			});
 
-			Fatality:CreateAnimation(ColorOptSlide,0.45,{
+			Fatality:CreateAnimation(ColorOptSlide,0.3,{
 				BackgroundTransparency = 0
 			});
 
-			Fatality:CreateAnimation(UIStroke_4,0.45,{
+			Fatality:CreateAnimation(UIStroke_4,0.3,{
 				Transparency = 0.75
 			});
 
-			Fatality:CreateAnimation(UIStroke_5,0.45,{
+			Fatality:CreateAnimation(UIStroke_5,0.3,{
 				Transparency = 0
 			});
 
-			Fatality:CreateAnimation(PasteButton,0.45,{
+			Fatality:CreateAnimation(PasteButton,0.3,{
 				ImageTransparency = 0.45
 			});
 
-			Fatality:CreateAnimation(CopyButton,0.45,{
+			Fatality:CreateAnimation(CopyButton,0.3,{
 				ImageTransparency = 0.45
 			});
 
-			Fatality:CreateAnimation(hexCode,0.45,{
+			Fatality:CreateAnimation(hexCode,0.3,{
 				BackgroundTransparency = 0.4
 			});
 
-			Fatality:CreateAnimation(HexCodeText,0.45,{
+			Fatality:CreateAnimation(HexCodeText,0.3,{
 				TextTransparency = 0.45
 			});
 		else
@@ -1620,72 +1620,72 @@ function Fatality:CreateColorPicker(ColorBox: Frame,Transparency, Callback)
 				UI_SPAWN_THREAD = nil;
 			end;
 
-			Fatality:CreateAnimation(ColorPickerFrame,0.45,{
+			Fatality:CreateAnimation(ColorPickerFrame,0.25,{
 				Size = UDim2.new(0, 175, 0, 0)
 			});
 
-			Fatality:CreateAnimation(UIStroke,0.45,{
+			Fatality:CreateAnimation(UIStroke,0.25,{
 				Transparency = 1
 			});
 
-			Fatality:CreateAnimation(DropShadow,0.45,{
+			Fatality:CreateAnimation(DropShadow,0.25,{
 				ImageTransparency = 1
 			});
 
-			Fatality:CreateAnimation(ColorPickBox,0.45,{
+			Fatality:CreateAnimation(ColorPickBox,0.25,{
 				ImageTransparency = 1,
 				BackgroundTransparency = 1
 			});
 
-			Fatality:CreateAnimation(MouseMovement,0.45,{
+			Fatality:CreateAnimation(MouseMovement,0.25,{
 				ImageTransparency = 1,
 			});
 
-			Fatality:CreateAnimation(UIStroke_2,0.45,{
+			Fatality:CreateAnimation(UIStroke_2,0.25,{
 				Transparency = 1
 			});
 
-			Fatality:CreateAnimation(ColorRedGreenBlue,0.45,{
+			Fatality:CreateAnimation(ColorRedGreenBlue,0.25,{
 				BackgroundTransparency = 1
 			});
 
-			Fatality:CreateAnimation(ColorRGBSlide,0.45,{
+			Fatality:CreateAnimation(ColorRGBSlide,0.25,{
 				BackgroundTransparency = 1
 			});
 
-			Fatality:CreateAnimation(UIStroke_3,0.45,{
+			Fatality:CreateAnimation(UIStroke_3,0.25,{
 				Transparency = 1
 			});
 
-			Fatality:CreateAnimation(ColorOpc,0.45,{
+			Fatality:CreateAnimation(ColorOpc,0.25,{
 				BackgroundTransparency = 1
 			});
 
-			Fatality:CreateAnimation(ColorOptSlide,0.45,{
+			Fatality:CreateAnimation(ColorOptSlide,0.25,{
 				BackgroundTransparency = 1
 			});
 
-			Fatality:CreateAnimation(UIStroke_4,0.45,{
+			Fatality:CreateAnimation(UIStroke_4,0.25,{
 				Transparency = 1
 			});
 
-			Fatality:CreateAnimation(UIStroke_5,0.45,{
+			Fatality:CreateAnimation(UIStroke_5,0.25,{
 				Transparency = 1
 			});
 
-			Fatality:CreateAnimation(PasteButton,0.45,{
+			Fatality:CreateAnimation(PasteButton,0.25,{
 				ImageTransparency = 1
 			});
 
-			Fatality:CreateAnimation(CopyButton,0.45,{
+			Fatality:CreateAnimation(CopyButton,0.25,{
 				ImageTransparency = 1
 			});
 
-			Fatality:CreateAnimation(hexCode,0.45,{
+			Fatality:CreateAnimation(hexCode,0.25,{
 				BackgroundTransparency = 1
 			});
 
-			Fatality:CreateAnimation(HexCodeText,0.45,{
+			Fatality:CreateAnimation(HexCodeText,0.25,{
 				TextTransparency = 1
 			});
 		end;
@@ -1888,11 +1888,11 @@ function Fatality:CreateColorPicker(ColorBox: Frame,Transparency, Callback)
 
 	Fatality:CreateHover(CopyButton,function(bool)
 		if bool then
-			Fatality:CreateAnimation(CopyButton,0.45,{
+			Fatality:CreateAnimation(CopyButton,0.2,{
 				ImageTransparency = 0.1
 			})
 		else
-			Fatality:CreateAnimation(CopyButton,0.45,{
+			Fatality:CreateAnimation(CopyButton,0.2,{
 				ImageTransparency = 0.45
 			})
 		end
@@ -1900,11 +1900,11 @@ function Fatality:CreateColorPicker(ColorBox: Frame,Transparency, Callback)
 
 	Fatality:CreateHover(PasteButton,function(bool)
 		if bool then
-			Fatality:CreateAnimation(PasteButton,0.45,{
+			Fatality:CreateAnimation(PasteButton,0.2,{
 				ImageTransparency = 0.1
 			})
 		else
-			Fatality:CreateAnimation(PasteButton,0.45,{
+			Fatality:CreateAnimation(PasteButton,0.2,{
 				ImageTransparency = 0.45
 			})
 		end
@@ -1922,19 +1922,19 @@ function Fatality:CreateColorPicker(ColorBox: Frame,Transparency, Callback)
 
 			HexCodeText.Text = "#" .. tostring(Fatality.GLOBAL_ENVIRONMENT.COLOR_COPY.RGB:ToHex());
 
-			Fatality:CreateAnimation(ColorRGBSlide,0.35,{
+			Fatality:CreateAnimation(ColorRGBSlide,0.25,{
 				Position = UDim2.new(0.5, 0, OldCode, 0)
 			});
 
-			Fatality:CreateAnimation(MouseMovement,0.35,{
+			Fatality:CreateAnimation(MouseMovement,0.25,{
 				Position = UDim2.new(CodeH, 0, 1 - CodeV, 0)
 			})
 
-			Fatality:CreateAnimation(ColorOptSlide,0.35,{
+			Fatality:CreateAnimation(ColorOptSlide,0.25,{
 				Position = UDim2.new(1- Transparency, 0, 0.5, 0)
 			})
 
-			Fatality:CreateAnimation(ColorPickerFrame,0.45,{
+			Fatality:CreateAnimation(ColorPickerFrame,0.3,{
 				Size = UDim2.new(0, 175, 0, 195),
 			});
 
@@ -2012,19 +2012,19 @@ function Fatality:CreateColorPicker(ColorBox: Frame,Transparency, Callback)
 
 					local Color = Color3.fromHSV(Code, CodeH, CodeV);
 
-					Fatality:CreateAnimation(ColorRGBSlide,0.35,{
+					Fatality:CreateAnimation(ColorRGBSlide,0.15,{
 						Position = UDim2.new(0.5, 0, Code, 0)
 					});
 
-					Fatality:CreateAnimation(ColorBox,0.5,{
+					Fatality:CreateAnimation(ColorBox,0.25,{
 						BackgroundColor3 = Color
 					});
 
-					Fatality:CreateAnimation(ColorOpc,0.35,{
+					Fatality:CreateAnimation(ColorOpc,0.2,{
 						BackgroundColor3 = Color
 					});
 
-					Fatality:CreateAnimation(ColorPickBox,0.5,{
+					Fatality:CreateAnimation(ColorPickBox,0.25,{
 						BackgroundColor3 = Color3.fromHSV(Code, 1, 1)
 					});
 
@@ -2042,7 +2042,7 @@ function Fatality:CreateColorPicker(ColorBox: Frame,Transparency, Callback)
 				while (UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) or IsPressM1) do task.wait()
 					local transparency = math.clamp((((Mouse.X) - ColorOpc.AbsolutePosition.X) / ColorOpc.AbsoluteSize.X), 0, 1);
 
-					Fatality:CreateAnimation(ColorOptSlide,0.35,{
+					Fatality:CreateAnimation(ColorOptSlide,0.15,{
 						Position = UDim2.new(transparency, 0, 0.5, 0)
 					});
 
@@ -2067,17 +2067,17 @@ function Fatality:CreateColorPicker(ColorBox: Frame,Transparency, Callback)
 					CodeH = (Value - PosX) / (ScaleX - PosX);
 					CodeV = (1 - ((Vals - PosY) / (ScaleY - PosY)));
 
-					Fatality:CreateAnimation(ColorBox,0.5,{
+					Fatality:CreateAnimation(ColorBox,0.25,{
 						BackgroundColor3 = Color3.fromHSV(OldCode, CodeH, CodeV)
 					});
 
-					Fatality:CreateAnimation(ColorOpc,0.35,{
+					Fatality:CreateAnimation(ColorOpc,0.2,{
 						BackgroundColor3 = Color3.fromHSV(OldCode, CodeH, CodeV)
 					});
 
 					HexCodeText.Text = "#" .. tostring(Color3.fromHSV(OldCode, CodeH, CodeV):ToHex())
 
-					Fatality:CreateAnimation(MouseMovement,0.2,nil,{
+					Fatality:CreateAnimation(MouseMovement,0.1,nil,{
 						Position = UDim2.new(CodeH, 0, 1 - CodeV, 0)
 					})
 				end
@@ -2168,17 +2168,17 @@ function Fatality:CreateDropdown(Parent: Frame, Default: string | {[string]: boo
 
 					DropdownItemFrame.Position = UDim2.fromOffset(Parent.AbsolutePosition.X,Parent.AbsolutePosition.Y + (Parent.AbsoluteSize.Y * 5))
 
-					Fatality:CreateAnimation(DropdownItemFrame,0.35,{
+					Fatality:CreateAnimation(DropdownItemFrame,0.25,{
 						Size = UDim2.new(0, 175, 0, math.clamp(baseSize,0,200))
 					})
 				end;
 			end)
 
-			Fatality:CreateAnimation(UIStroke,0.35,{
+			Fatality:CreateAnimation(UIStroke,0.25,{
 				Transparency = 0
 			})
 
-			Fatality:CreateAnimation(DropShadow,0.35,{
+			Fatality:CreateAnimation(DropShadow,0.25,{
 				ImageTransparency = 0.75
 			})
 		else
@@ -2187,15 +2187,15 @@ function Fatality:CreateDropdown(Parent: Frame, Default: string | {[string]: boo
 				SPAWN_THREAD = nil;
 			end;
 
-			Fatality:CreateAnimation(DropdownItemFrame,0.35,{
+			Fatality:CreateAnimation(DropdownItemFrame,0.2,{
 				Size = UDim2.new(0, 175, 0, 0)
 			})
 
-			Fatality:CreateAnimation(UIStroke,0.35,{
+			Fatality:CreateAnimation(UIStroke,0.2,{
 				Transparency = 1
 			})
 
-			Fatality:CreateAnimation(DropShadow,0.35,{
+			Fatality:CreateAnimation(DropShadow,0.2,{
 				ImageTransparency = 1
 			})
 		end;
@@ -2470,13 +2470,13 @@ function Fatality:CreateElements(Parent : Frame , ZIndex : number , Event : Bind
 
 		local toggleImg = function(value)
 			if value then
-				Fatality:CreateAnimation(ValueIcon,0.45,{
+				Fatality:CreateAnimation(ValueIcon,0.25,{
 					ImageTransparency = 0,
 					Size = UDim2.new(0.8, 0, 0.8, 0),
 					Rotation = 0,
 				})
 			else
-				Fatality:CreateAnimation(ValueIcon,0.45,{
+				Fatality:CreateAnimation(ValueIcon,0.25,{
 					ImageTransparency = 1,
 					ImageColor3 = Color3.fromRGB(255, 255, 255),
 					Size = UDim2.new(0.699999988, 0, 0.699999988, 0),
@@ -2487,41 +2487,41 @@ function Fatality:CreateElements(Parent : Frame , ZIndex : number , Event : Bind
 
 		local OpcToggle = function(value)
 			if value then
-				Fatality:CreateAnimation(ValueIcon,0.45,{
+				Fatality:CreateAnimation(ValueIcon,0.3,{
 					ImageTransparency = 1,
 				})
 
-				Fatality:CreateAnimation(OptionButton,0.45,{
+				Fatality:CreateAnimation(OptionButton,0.3,{
 					ImageTransparency = (Config.Option and 0.600) or 1
 				})
 
 				toggleImg(Config.Default)
 
-				Fatality:CreateAnimation(ValueFrame,0.45,{
+				Fatality:CreateAnimation(ValueFrame,0.3,{
 					BackgroundTransparency = 0,
 				})
 
-				Fatality:CreateAnimation(Toggle_Name,0.45,{
+				Fatality:CreateAnimation(Toggle_Name,0.3,{
 					TextTransparency = 0.200
 				})
 			else
-				Fatality:CreateAnimation(Toggle_Name,0.45,{
+				Fatality:CreateAnimation(Toggle_Name,0.25,{
 					TextTransparency = 1
 				})
 
-				Fatality:CreateAnimation(ValueFrame,0.45,{
+				Fatality:CreateAnimation(ValueFrame,0.25,{
 					BackgroundTransparency = 1,
 				})
 
-				Fatality:CreateAnimation(ValueIcon,0.45,{
+				Fatality:CreateAnimation(ValueIcon,0.25,{
 					ImageTransparency = 1,
 				})
 
-				Fatality:CreateAnimation(ValueIcon,0.45,{
+				Fatality:CreateAnimation(ValueIcon,0.25,{
 					ImageTransparency = 1,
 				})
 
-				Fatality:CreateAnimation(OptionButton,0.45,{
+				Fatality:CreateAnimation(OptionButton,0.25,{
 					ImageTransparency = 1
 				})
 			end;
@@ -2534,14 +2534,14 @@ function Fatality:CreateElements(Parent : Frame , ZIndex : number , Event : Bind
 		Fatality:CreateHover(ValueFrame,function(b)
 			if not Config.Default then
 				if b then
-					Fatality:CreateAnimation(ValueIcon,0.45,{
+					Fatality:CreateAnimation(ValueIcon,0.25,{
 						ImageTransparency = 0.5,
 						ImageColor3 = Color3.fromRGB(255, 255, 255),
 						Size = UDim2.new(0.7, 0, 0.7, 0),
 						Rotation = 0
 					})
 				else
-					Fatality:CreateAnimation(ValueIcon,0.45,{
+					Fatality:CreateAnimation(ValueIcon,0.25,{
 						ImageTransparency = 1,
 						ImageColor3 = Color3.fromRGB(255, 255, 255),
 						Size = UDim2.new(0.699999988, 0, 0.699999988, 0),
@@ -2699,45 +2699,45 @@ function Fatality:CreateElements(Parent : Frame , ZIndex : number , Event : Bind
 
 		local OpcToggle = function(value)
 			if value then
-				Fatality:CreateAnimation(boxli,0.45,{
+				Fatality:CreateAnimation(boxli,0.3,{
 					BackgroundTransparency = 0,
 				})
 
-				Fatality:CreateAnimation(OptionButton,0.45,{
+				Fatality:CreateAnimation(OptionButton,0.3,{
 					ImageTransparency = (Config.Option and 0.600) or 1
 				})
 
-				Fatality:CreateAnimation(ValueFrame,0.45,{
+				Fatality:CreateAnimation(ValueFrame,0.3,{
 					BackgroundTransparency = 0,
 				})
 
-				Fatality:CreateAnimation(Slider_Name,0.45,{
+				Fatality:CreateAnimation(Slider_Name,0.3,{
 					TextTransparency = 0.200
 				})
 
-				Fatality:CreateAnimation(ValueText,0.45,{
+				Fatality:CreateAnimation(ValueText,0.3,{
 					TextStrokeTransparency = 0.850,
 					TextTransparency = 0;
 				})
 			else
-				Fatality:CreateAnimation(ValueText,0.45,{
+				Fatality:CreateAnimation(ValueText,0.25,{
 					TextStrokeTransparency = 1,
 					TextTransparency = 1;
 				})
 
-				Fatality:CreateAnimation(Slider_Name,0.45,{
+				Fatality:CreateAnimation(Slider_Name,0.25,{
 					TextTransparency = 1
 				})
 
-				Fatality:CreateAnimation(ValueFrame,0.45,{
+				Fatality:CreateAnimation(ValueFrame,0.25,{
 					BackgroundTransparency = 1,
 				})
 
-				Fatality:CreateAnimation(boxli,0.45,{
+				Fatality:CreateAnimation(boxli,0.25,{
 					BackgroundTransparency = 1,
 				})
 
-				Fatality:CreateAnimation(OptionButton,0.45,{
+				Fatality:CreateAnimation(OptionButton,0.25,{
 					ImageTransparency = 1
 				})
 			end;
@@ -2881,19 +2881,19 @@ function Fatality:CreateElements(Parent : Frame , ZIndex : number , Event : Bind
 
 		local OpcToggle = function(value)
 			if value then
-				Fatality:CreateAnimation(Button_Name,0.45,{
+				Fatality:CreateAnimation(Button_Name,0.3,{
 					TextTransparency = 0.4,
 				})
 
-				Fatality:CreateAnimation(Button,0.45,{
+				Fatality:CreateAnimation(Button,0.3,{
 					BackgroundTransparency = 0,
 				})
 			else
-				Fatality:CreateAnimation(Button_Name,0.45,{
+				Fatality:CreateAnimation(Button_Name,0.25,{
 					TextTransparency = 1,
 				})
 
-				Fatality:CreateAnimation(Button,0.45,{
+				Fatality:CreateAnimation(Button,0.25,{
 					BackgroundTransparency = 1,
 				})
 			end;
@@ -2903,11 +2903,11 @@ function Fatality:CreateElements(Parent : Frame , ZIndex : number , Event : Bind
 
 		Fatality:CreateHover(Button,function(value)
 			if value then
-				Fatality:CreateAnimation(Button,0.45,{
+				Fatality:CreateAnimation(Button,0.2,{
 					BackgroundColor3 = Color3.fromRGB(14, 14, 14)
 				})
 			else
-				Fatality:CreateAnimation(Button,0.45,{
+				Fatality:CreateAnimation(Button,0.2,{
 					BackgroundColor3 = Fatality.Colors.Black
 				})
 			end;
@@ -3013,27 +3013,27 @@ function Fatality:CreateElements(Parent : Frame , ZIndex : number , Event : Bind
 
 		local OpcToggle = function(value)
 			if value then
-				Fatality:CreateAnimation(ColorPicker_Name,0.45,{
+				Fatality:CreateAnimation(ColorPicker_Name,0.3,{
 					TextTransparency = 0.2,
 				})
 
-				Fatality:CreateAnimation(ValueFrame,0.45,{
+				Fatality:CreateAnimation(ValueFrame,0.3,{
 					Size = UDim2.new(0, 35, 0.7, 0)
 				})
 
-				Fatality:CreateAnimation(OptionButton,0.45,{
+				Fatality:CreateAnimation(OptionButton,0.3,{
 					ImageTransparency = (Config.Option and 0.6) or 1,
 				})
 			else
-				Fatality:CreateAnimation(ColorPicker_Name,0.45,{
+				Fatality:CreateAnimation(ColorPicker_Name,0.25,{
 					TextTransparency = 1,
 				})
 
-				Fatality:CreateAnimation(ValueFrame,0.45,{
+				Fatality:CreateAnimation(ValueFrame,0.25,{
 					Size = UDim2.new(0, 35, 0, 0)
 				})
 
-				Fatality:CreateAnimation(OptionButton,0.45,{
+				Fatality:CreateAnimation(OptionButton,0.25,{
 					ImageTransparency = 1,
 				})
 			end;
@@ -3232,12 +3232,12 @@ function Fatality:CreateElements(Parent : Frame , ZIndex : number , Event : Bind
 
 		res:on_toggle(function(b)
 			if b then
-				Fatality:CreateAnimation(icon,0.35,{
+				Fatality:CreateAnimation(icon,0.2,{
 					Rotation = -180,
 					ImageColor3 = Fatality.Colors.Main
 				})
 			else
-				Fatality:CreateAnimation(icon,0.35,{
+				Fatality:CreateAnimation(icon,0.2,{
 					Rotation = 0,
 					ImageColor3 = Color3.fromRGB(255, 255, 255)
 				})
@@ -3246,43 +3246,43 @@ function Fatality:CreateElements(Parent : Frame , ZIndex : number , Event : Bind
 
 		local OpcToggle = function(value)
 			if value then
-				Fatality:CreateAnimation(Dropdown_Name,0.45,{
+				Fatality:CreateAnimation(Dropdown_Name,0.3,{
 					TextTransparency = 0.2,
 				})
 
-				Fatality:CreateAnimation(ValueFrame,0.45,{
+				Fatality:CreateAnimation(ValueFrame,0.3,{
 					BackgroundTransparency = 0
 				})
 
-				Fatality:CreateAnimation(icon,0.45,{
+				Fatality:CreateAnimation(icon,0.3,{
 					ImageTransparency = 0
 				})
 
-				Fatality:CreateAnimation(Value_Text,0.45,{
+				Fatality:CreateAnimation(Value_Text,0.3,{
 					TextTransparency = 0.5
 				})
 
-				Fatality:CreateAnimation(OptionButton,0.45,{
+				Fatality:CreateAnimation(OptionButton,0.3,{
 					ImageTransparency = (Config.Option and 0.6) or 1,
 				})
 			else
-				Fatality:CreateAnimation(Dropdown_Name,0.45,{
+				Fatality:CreateAnimation(Dropdown_Name,0.25,{
 					TextTransparency = 1,
 				})
 
-				Fatality:CreateAnimation(ValueFrame,0.45,{
+				Fatality:CreateAnimation(ValueFrame,0.25,{
 					BackgroundTransparency = 1
 				})
 
-				Fatality:CreateAnimation(icon,0.45,{
+				Fatality:CreateAnimation(icon,0.25,{
 					ImageTransparency = 1
 				})
 
-				Fatality:CreateAnimation(Value_Text,0.45,{
+				Fatality:CreateAnimation(Value_Text,0.25,{
 					TextTransparency = 1
 				})
 
-				Fatality:CreateAnimation(OptionButton,0.45,{
+				Fatality:CreateAnimation(OptionButton,0.25,{
 					ImageTransparency = 1
 				})
 			end;
@@ -3493,37 +3493,37 @@ function Fatality:CreateElements(Parent : Frame , ZIndex : number , Event : Bind
 
 		local OpcToggle = function(value)
 			if value then
-				Fatality:CreateAnimation(Keybind_Name,0.45,{
+				Fatality:CreateAnimation(Keybind_Name,0.3,{
 					TextTransparency = 0.2,
 				})
 
-				Fatality:CreateAnimation(ValueFrame,0.45,{
+				Fatality:CreateAnimation(ValueFrame,0.3,{
 					BackgroundTransparency = 0
 				})
 
-				Fatality:CreateAnimation(ValueText,0.45,{
+				Fatality:CreateAnimation(ValueText,0.3,{
 					TextStrokeTransparency = 0.850,
 					TextTransparency = 0.400
 				})
 
-				Fatality:CreateAnimation(OptionButton,0.45,{
+				Fatality:CreateAnimation(OptionButton,0.3,{
 					ImageTransparency = (Config.Option and 0.6) or 1,
 				})
 			else
-				Fatality:CreateAnimation(Keybind_Name,0.45,{
+				Fatality:CreateAnimation(Keybind_Name,0.25,{
 					TextTransparency = 1,
 				})
 
-				Fatality:CreateAnimation(ValueFrame,0.45,{
+				Fatality:CreateAnimation(ValueFrame,0.25,{
 					BackgroundTransparency = 1
 				})
 
-				Fatality:CreateAnimation(ValueText,0.45,{
+				Fatality:CreateAnimation(ValueText,0.25,{
 					TextStrokeTransparency = 1,
 					TextTransparency = 1
 				})
 
-				Fatality:CreateAnimation(OptionButton,0.45,{
+				Fatality:CreateAnimation(OptionButton,0.25,{
 					ImageTransparency = 1,
 				})
 			end;
@@ -4305,68 +4305,68 @@ function Fatality.new(Window: Window)
 				Fatal.MenuSelected.ValueSelect(true)
 			end
 
-			Fatality:CreateAnimation(FatalFrame,0.15,{
+			Fatality:CreateAnimation(FatalFrame,0.25,{
 				Size = Window.Scale,
 				BackgroundTransparency = 0,
 			})
 
-			Fatality:CreateAnimation(Header,0.5,{
+			Fatality:CreateAnimation(Header,0.3,{
 				BackgroundTransparency = 0,
 			})
 
-			Fatality:CreateAnimation(HeaderLine,0.5,{
+			Fatality:CreateAnimation(HeaderLine,0.3,{
 				BackgroundTransparency = 0,
 			})
 
-			Fatality:CreateAnimation(Bottom,0.5,{
+			Fatality:CreateAnimation(Bottom,0.3,{
 				BackgroundTransparency = 0,
 			})
 
-			Fatality:CreateAnimation(HeaderLine_2,0.5,{
+			Fatality:CreateAnimation(HeaderLine_2,0.3,{
 				BackgroundTransparency = 0,
 			})
 
-			Fatality:CreateAnimation(HeaderLineShadow,0.5,{
+			Fatality:CreateAnimation(HeaderLineShadow,0.3,{
 				BackgroundTransparency = 0.5,
 			})
 
-			Fatality:CreateAnimation(HeaderLineShadow_2,0.5,{
+			Fatality:CreateAnimation(HeaderLineShadow_2,0.3,{
 				BackgroundTransparency = 0.5,
 			})
 
-			Fatality:CreateAnimation(InfoButton,0.25,{
+			Fatality:CreateAnimation(InfoButton,0.2,{
 				ImageTransparency = 0.5
 			})
 
-			Fatality:CreateAnimation(SearchButton,0.25,{
+			Fatality:CreateAnimation(SearchButton,0.2,{
 				ImageTransparency = 0.5
 			})
 
-			Fatality:CreateAnimation(SaveButton,0.25,{
+			Fatality:CreateAnimation(SaveButton,0.2,{
 				ImageTransparency = 0.5
 			})
 
-			Fatality:CreateAnimation(HeaderText,0.35,{
+			Fatality:CreateAnimation(HeaderText,0.3,{
 				TextStrokeTransparency = 0.640,
 				TextTransparency = 0
 			})
 
-			Fatality:CreateAnimation(UserIcon,0.45,{
+			Fatality:CreateAnimation(UserIcon,0.3,{
 				ImageTransparency = 0,
 				Position = UDim2.new(1, -10,0.5, 0)
 			})
 
-			Fatality:CreateAnimation(User_name,0.35,{
+			Fatality:CreateAnimation(User_name,0.3,{
 				TextTransparency = 0,
 				Position = UDim2.new(1, -40,0, 3)
 			})
 
-			Fatality:CreateAnimation(expire_days,0.5,{
+			Fatality:CreateAnimation(expire_days,0.3,{
 				TextTransparency = 0,
 				Position = UDim2.new(1, -40,0, 16)
 			})
 
-			Fatality:CreateAnimation(UIStroke,0.35,{
+			Fatality:CreateAnimation(UIStroke,0.3,{
 				Thickness = 2.500,
 				Transparency = 0.900
 			})
@@ -4383,7 +4383,7 @@ function Fatality.new(Window: Window)
 				Position = UDim2.new(0,35,0.5, 0)
 			})
 
-			Fatality:CreateAnimation(DropShadow,0.35,{
+			Fatality:CreateAnimation(DropShadow,0.3,{
 				ImageTransparency = 0.75
 			})
 		else
@@ -4393,84 +4393,84 @@ function Fatality.new(Window: Window)
 				v.ValueSelect(false);
 			end;
 
-			Fatality:CreateAnimation(SaveButton,0.35,{
+			Fatality:CreateAnimation(SaveButton,0.25,{
 				Position = UDim2.new(0,35,1, 20)
 			})
 
-			Fatality:CreateAnimation(SearchButton,0.35,{
+			Fatality:CreateAnimation(SearchButton,0.25,{
 				Position = UDim2.new(0,10,1, 20)
 			})
 
-			Fatality:CreateAnimation(InfoButton,0.35,{
+			Fatality:CreateAnimation(InfoButton,0.25,{
 				Position = UDim2.new(1, -5,1, 20)
 			})
 
-			Fatality:CreateAnimation(UIStroke,0.35,{
+			Fatality:CreateAnimation(UIStroke,0.25,{
 				Thickness = 0,
 				Transparency = 1
 			})
 
-			Fatality:CreateAnimation(UserIcon,0.35,{
+			Fatality:CreateAnimation(UserIcon,0.25,{
 				ImageTransparency = 1,
 				Position = UDim2.new(1, -10,0.5, 0)
 			})
 
-			Fatality:CreateAnimation(User_name,0.35,{
+			Fatality:CreateAnimation(User_name,0.25,{
 				TextTransparency = 1,
 				Position = UDim2.new(1, -40,0, 3)
 			})
 
-			Fatality:CreateAnimation(expire_days,0.1,{
+			Fatality:CreateAnimation(expire_days,0.2,{
 				TextTransparency = 1,
 				Position = UDim2.new(1, -40,0, 16)
 			})
 
-			Fatality:CreateAnimation(HeaderText,0.35,{
+			Fatality:CreateAnimation(HeaderText,0.25,{
 				TextStrokeTransparency = 1,
 				TextTransparency = 1
 			})
 
-			Fatality:CreateAnimation(HeaderLineShadow_2,0.5,{
+			Fatality:CreateAnimation(HeaderLineShadow_2,0.3,{
 				BackgroundTransparency = 1,
 			})
 
-			Fatality:CreateAnimation(InfoButton,0.35,{
+			Fatality:CreateAnimation(InfoButton,0.25,{
 				ImageTransparency = 1
 			})
 
-			Fatality:CreateAnimation(SearchButton,0.35,{
+			Fatality:CreateAnimation(SearchButton,0.25,{
 				ImageTransparency = 1
 			})
 
-			Fatality:CreateAnimation(SaveButton,0.35,{
+			Fatality:CreateAnimation(SaveButton,0.25,{
 				ImageTransparency = 1
 			})
 
-			Fatality:CreateAnimation(HeaderLineShadow,0.5,{
+			Fatality:CreateAnimation(HeaderLineShadow,0.3,{
 				BackgroundTransparency = 1,
 			})
 
-			Fatality:CreateAnimation(FatalFrame,0.75,{
+			Fatality:CreateAnimation(FatalFrame,0.4,{
 				BackgroundTransparency = 1,
 			})
 
-			Fatality:CreateAnimation(Header,0.5,{
+			Fatality:CreateAnimation(Header,0.3,{
 				BackgroundTransparency = 1,
 			})
 
-			Fatality:CreateAnimation(HeaderLine,0.5,{
+			Fatality:CreateAnimation(HeaderLine,0.3,{
 				BackgroundTransparency = 1,
 			})
 
-			Fatality:CreateAnimation(Bottom,0.5,{
+			Fatality:CreateAnimation(Bottom,0.3,{
 				BackgroundTransparency = 1,
 			})
 
-			Fatality:CreateAnimation(HeaderLine_2,0.5,{
+			Fatality:CreateAnimation(HeaderLine_2,0.3,{
 				BackgroundTransparency = 1,
 			})
 
-			Fatality:CreateAnimation(DropShadow,0.35,{
+			Fatality:CreateAnimation(DropShadow,0.25,{
 				ImageTransparency = 1
 			})
 		end
@@ -5029,60 +5029,60 @@ function Fatality.new(Window: Window)
 
 		Fatal.Signal.Event:Connect(function(Bool)
 			if Bool then
-				Fatality:CreateAnimation(MenuButton,0.5,{
+				Fatality:CreateAnimation(MenuButton,0.3,{
 					BackgroundTransparency = (MenuLiber.Visible and 0) or 1
 				})
 
-				Fatality:CreateAnimation(UIStroke,0.5,{
+				Fatality:CreateAnimation(UIStroke,0.3,{
 					Transparency = 0.950
 				})
 
-				Fatality:CreateAnimation(Left,0.3,{
+				Fatality:CreateAnimation(Left,0.25,{
 					Position = UDim2.new(0.175, 0, 0.5, 0)
 				})
 
-				Fatality:CreateAnimation(Center,0.4,{
+				Fatality:CreateAnimation(Center,0.3,{
 					Position = UDim2.new(0.5, 0, 0.5, 0)
 				})
 
-				Fatality:CreateAnimation(Right,0.5,{
+				Fatality:CreateAnimation(Right,0.35,{
 					Position = UDim2.new(0.825, 0, 0.5, 0)
 				})
 
-				Fatality:CreateAnimation(Icon,0.5,{
+				Fatality:CreateAnimation(Icon,0.3,{
 					ImageTransparency = (MenuLiber.Visible and 0.15) or 0.5
 				})
 
-				Fatality:CreateAnimation(menu_name,0.5,{
+				Fatality:CreateAnimation(menu_name,0.3,{
 					TextStrokeTransparency = 0.900,
 					TextTransparency = (MenuLiber.Visible and 0.15) or 0.5
 				})
 			else
-				Fatality:CreateAnimation(Left,0.5,{
+				Fatality:CreateAnimation(Left,0.3,{
 					Position = UDim2.new(0.175, 0, 0.5, 1)
 				})
 
-				Fatality:CreateAnimation(Center,0.5,{
+				Fatality:CreateAnimation(Center,0.3,{
 					Position = UDim2.new(0.5, 0, 0.5, 2)
 				})
 
-				Fatality:CreateAnimation(Right,0.5,{
+				Fatality:CreateAnimation(Right,0.3,{
 					Position = UDim2.new(0.825, 0, 0.5, 3)
 				})
 
-				Fatality:CreateAnimation(MenuButton,0.5,{
+				Fatality:CreateAnimation(MenuButton,0.3,{
 					BackgroundTransparency = 1
 				})
 
-				Fatality:CreateAnimation(UIStroke,0.5,{
+				Fatality:CreateAnimation(UIStroke,0.3,{
 					Transparency = 1
 				})
 
-				Fatality:CreateAnimation(Icon,0.5,{
+				Fatality:CreateAnimation(Icon,0.3,{
 					ImageTransparency = 1
 				})
 
-				Fatality:CreateAnimation(menu_name,0.5,{
+				Fatality:CreateAnimation(menu_name,0.3,{
 					TextStrokeTransparency = 1,
 					TextTransparency = 1
 				})
@@ -5093,15 +5093,15 @@ function Fatality.new(Window: Window)
 			if val then
 				MenuLiber.Visible = true;
 
-				Fatality:CreateAnimation(Icon,0.5,{
+				Fatality:CreateAnimation(Icon,0.3,{
 					ImageTransparency = 0.15
 				});
 
-				Fatality:CreateAnimation(menu_name,0.5,{
+				Fatality:CreateAnimation(menu_name,0.3,{
 					TextTransparency = 0.15
 				});
 
-				Fatality:CreateAnimation(MenuButton,0.5,{
+				Fatality:CreateAnimation(MenuButton,0.3,{
 					BackgroundTransparency = 0
 				})
 
@@ -5113,15 +5113,15 @@ function Fatality.new(Window: Window)
 
 				MenuLiber.Visible = false;
 
-				Fatality:CreateAnimation(Icon,0.5,{
+				Fatality:CreateAnimation(Icon,0.3,{
 					ImageTransparency = 0.5
 				});
 
-				Fatality:CreateAnimation(MenuButton,0.5,{
+				Fatality:CreateAnimation(MenuButton,0.3,{
 					BackgroundTransparency = 1
 				})
 
-				Fatality:CreateAnimation(menu_name,0.5,{
+				Fatality:CreateAnimation(menu_name,0.3,{
 					TextTransparency = 0.5
 				});
 			end;
@@ -5146,27 +5146,27 @@ function Fatality.new(Window: Window)
 		Fatality:CreateHover(MenuButton,function(bool)
 			if Fatal.MenuSelected.Root ~= MenuLiber then
 				if bool then
-					Fatality:CreateAnimation(Icon,0.5,{
+					Fatality:CreateAnimation(Icon,0.25,{
 						ImageTransparency = 0.2,
 					});
 
-					Fatality:CreateAnimation(MenuButton,0.5,{
+					Fatality:CreateAnimation(MenuButton,0.25,{
 						BackgroundTransparency = 1
 					})
 
-					Fatality:CreateAnimation(menu_name,0.5,{
+					Fatality:CreateAnimation(menu_name,0.25,{
 						TextTransparency = 0.2
 					});
 				else
-					Fatality:CreateAnimation(Icon,0.5,{
+					Fatality:CreateAnimation(Icon,0.25,{
 						ImageTransparency = 0.5,
 					});
 
-					Fatality:CreateAnimation(MenuButton,0.5,{
+					Fatality:CreateAnimation(MenuButton,0.25,{
 						BackgroundTransparency = 1
 					})
 
-					Fatality:CreateAnimation(menu_name,0.5,{
+					Fatality:CreateAnimation(menu_name,0.25,{
 						TextTransparency = 0.5
 					});
 				end
@@ -5252,45 +5252,45 @@ function Fatality.new(Window: Window)
 			
 			local Toggle = function(v)
 				if v then
-					Fatality:CreateAnimation(Preview,0.5,{
+					Fatality:CreateAnimation(Preview,0.3,{
 						BackgroundTransparency = 0
 					})
 
-					Fatality:CreateAnimation(PreviewName,0.5,{
+					Fatality:CreateAnimation(PreviewName,0.3,{
 						TextStrokeTransparency = 0.750,
 						TextTransparency = 0
 					})
 					
-					Fatality:CreateAnimation(Main,0.5,{
+					Fatality:CreateAnimation(Main,0.3,{
 						BackgroundTransparency = 0
 					})
 					
-					Fatality:CreateAnimation(UIStroke,0.5,{
+					Fatality:CreateAnimation(UIStroke,0.3,{
 						Transparency = 0
 					})
 					
-					Fatality:CreateAnimation(MainBlock,0.5,{
+					Fatality:CreateAnimation(MainBlock,0.3,{
 						Size = UDim2.new(1, -5, 1, -5)
 					})
 				else
-					Fatality:CreateAnimation(Preview,0.5,{
+					Fatality:CreateAnimation(Preview,0.25,{
 						BackgroundTransparency = 1
 					})
 
-					Fatality:CreateAnimation(PreviewName,0.5,{
+					Fatality:CreateAnimation(PreviewName,0.25,{
 						TextStrokeTransparency = 1,
 						TextTransparency = 1
 					})
 
-					Fatality:CreateAnimation(Main,0.5,{
+					Fatality:CreateAnimation(Main,0.25,{
 						BackgroundTransparency = 1
 					})
 
-					Fatality:CreateAnimation(UIStroke,0.5,{
+					Fatality:CreateAnimation(UIStroke,0.25,{
 						Transparency = 1
 					})
 
-					Fatality:CreateAnimation(MainBlock,0.5,{
+					Fatality:CreateAnimation(MainBlock,0.25,{
 						Size = UDim2.new(0,0,0,0)
 					})
 				end
