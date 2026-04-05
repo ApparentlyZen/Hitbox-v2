@@ -4233,6 +4233,7 @@ function Fatality.new(Window: Window)
 		Fatal.Signal:Fire(bool);
 
 		if bool then
+			Fatalitywin.Enabled = true
 			for i,v in next , Fatal.Menus do
 				v.ValueSelect(false);
 			end;
@@ -4241,10 +4242,10 @@ function Fatality.new(Window: Window)
 				Fatal.MenuSelected.ValueSelect(true)
 			end
 
-			Fatality:CreateAnimation(MainScale, 0.5, Enum.EasingStyle.Exponential, {
+			Fatality:CreateAnimation(MainScale, 0.6, Enum.EasingStyle.Back, {
 				Scale = 1
 			})
-			Fatality:CreateAnimation(FatalFrame, 0.5, {
+			Fatality:CreateAnimation(FatalFrame, 0.4, {
 				BackgroundTransparency = 0,
 			})
 
@@ -4431,13 +4432,14 @@ function Fatality.new(Window: Window)
 	FatalFrame.Active = true;
 	FatalFrame.Name = Fatality:RandomString()
 	FatalFrame.Parent = Fatalitywin
-	FatalFrame.AnchorPoint = Vector2.new(0.5, 0)
+	FatalFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 	FatalFrame.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
 	FatalFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	FatalFrame.BorderSizePixel = 0
-	FatalFrame.Position = UDim2.new(0.5, 0, 0.2);
+	FatalFrame.Position = UDim2.new(0.5, 0, 0.5, 0);
 	FatalFrame.Size = Window.Scale;
 	FatalFrame.ClipsDescendants = true
+	FatalFrame.BackgroundTransparency = 1
 
 	UICorner.CornerRadius = UDim.new(0, 22)
 	UICorner.Parent = FatalFrame
@@ -4445,7 +4447,7 @@ function Fatality.new(Window: Window)
 	local MainGradient = Instance.new("UIGradient", FatalFrame)
 	MainGradient.Color = ColorSequence.new({
 		ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
-		ColorSequenceKeypoint.new(1, Color3.fromRGB(180, 180, 180))
+		ColorSequenceKeypoint.new(1, Color3.fromRGB(120, 120, 120))
 	})
 	MainGradient.Rotation = 45
 
