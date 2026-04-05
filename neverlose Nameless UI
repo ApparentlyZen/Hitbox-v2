@@ -1,6 +1,6 @@
 --[[
                           Neverlose.cc UI Library
-    Author: 4lpaca
+    Author: HimselfZen
 	License: MIT
     Discord: https://arceney.win/discord
     Other-Projects: https://4lpaca.win
@@ -203,10 +203,83 @@ NeverLose.ScreenGui = GlobalWindow;
 NeverLose.Flags = {};
 NeverLose.AccentColor = Color3.fromRGB(78, 127, 252);
 NeverLose.MainColor = Color3.fromRGB(8, 8, 13);
+
+NeverLose.Themes = {
+	["Neverlose"] = {
+		AccentColor = Color3.fromRGB(78, 127, 252),
+		MainColor = Color3.fromRGB(8, 8, 13),
+	},
+	["Onetap"] = {
+		AccentColor = Color3.fromRGB(235, 171, 52),
+		MainColor = Color3.fromRGB(28, 28, 28),
+	},
+	["Fatality"] = {
+		AccentColor = Color3.fromRGB(191, 0, 80),
+		MainColor = Color3.fromRGB(20, 15, 30),
+	},
+	["Midnight"] = {
+		AccentColor = Color3.fromRGB(110, 86, 201),
+		MainColor = Color3.fromRGB(9, 8, 14),
+	},
+	["Skeet"] = {
+		AccentColor = Color3.fromRGB(155, 203, 98),
+		MainColor = Color3.fromRGB(17, 17, 17),
+	},
+	["Slap"] = {
+		AccentColor = Color3.fromRGB(0, 255, 133),
+		MainColor = Color3.fromRGB(5, 5, 5),
+	},
+	["Blood"] = {
+		AccentColor = Color3.fromRGB(255, 50, 50),
+		MainColor = Color3.fromRGB(10, 5, 5),
+	},
+	["Vanta"] = {
+		AccentColor = Color3.fromRGB(255, 255, 255),
+		MainColor = Color3.fromRGB(0, 0, 0),
+	},
+	["Emerald"] = {
+		AccentColor = Color3.fromRGB(46, 204, 113),
+		MainColor = Color3.fromRGB(10, 15, 12),
+	},
+	["Cyberpunk"] = {
+		AccentColor = Color3.fromRGB(255, 0, 255),
+		MainColor = Color3.fromRGB(5, 5, 20),
+	},
+	["Amethyst"] = {
+		AccentColor = Color3.fromRGB(155, 89, 182),
+		MainColor = Color3.fromRGB(15, 10, 20),
+	}
+};
+
+function NeverLose:UpdateUIColors()
+	for _, obj in next, self.RegisiteryColor do
+		pcall(function()
+			local targetColor = (obj.Type == "Accent" and self.AccentColor) or (obj.Type == "Main" and self.MainColor)
+			if targetColor then
+				TweenService:Create(obj.Instance, TweenInfo.new(0.3), {[obj.Property] = targetColor}):Play()
+			end
+		end)
+	end
+end
+
+function NeverLose:SetTheme(ThemeName)
+	local Data = self.Themes[ThemeName]
+	if Data then
+		self.AccentColor = Data.AccentColor
+		self.MainColor = Data.MainColor
+		self:UpdateUIColors()
+	end
+end
+
 NeverLose.RegisiteryColor = {};
+
+function NeverLose:RegisterColor(instance, property, colorType)
+	table.insert(self.RegisiteryColor, {Instance = instance, Property = property, Type = colorType or "Accent"})
+end
+
 NeverLose.NameRegisitry = {};
 NeverLose.IsMosueOverOtherFrame = false;
-NeverLose.GlobalLogo = "rbxassetid://120358385035996";
+NeverLose.GlobalLogo = "rbxassetid://6224526576";
 NeverLose.ImageColorMapping = "rbxassetid://4155801252";
 
 if getcustomasset then
@@ -4198,6 +4271,7 @@ function NeverLose:CreateWindow(Config)
 	LogoImage.ZIndex = 7
 	LogoImage.Image = Window.Logo
 	LogoImage.ImageColor3 = NeverLose.IconColor
+	NeverLose:RegisterColor(LogoImage, "ImageColor3")
 
 	UICorner_2.CornerRadius = UDim.new(0, 7)
 	UICorner_2.Parent = LogoImage
@@ -4775,6 +4849,7 @@ function NeverLose:CreateWindow(Config)
 		TabIcon.FontFace = NeverLose.BuiltInBold
 		TabIcon.Text = Config.Icon;
 		TabIcon.TextColor3 = NeverLose.AccentColor
+	NeverLose:RegisterColor(TabIcon, "TextColor3")
 		TabIcon.TextSize = 16.000
 		TabIcon.TextWrapped = true
 
@@ -5799,7 +5874,7 @@ function NeverLose:CreateWindow(Config)
 		return ConfigLib;
 	end;
 
-	Window:_InitConfig();
+	Window.ConfigLib = Window:_InitConfig();
 
 	local UserSettings = NeverLose:CreateOptionWindow(BottomFrame , BottomFrame.ZIndex + 13);
 	local reciveSignal;
@@ -5884,6 +5959,7 @@ function NeverLose:CreateWindow(Config)
 		MobileToggle.Size = UDim2.fromOffset(45, 45)
 		MobileToggle.Image = Window.Logo
 		MobileToggle.ImageColor3 = NeverLose.AccentColor
+		NeverLose:RegisterColor(MobileToggle, "ImageColor3")
 		MobileToggle.ZIndex = 200
 
 		UICorner.CornerRadius = UDim.new(0, 10)
@@ -6674,6 +6750,82 @@ function NeverLose:CreateIndicator()
 	end;
 
 	return Indicators;
+end;
+
+function NeverLose:CreateSettingsPage(Window, KeybindList)
+	local SettingsTab = Window:AddTab({
+		Name = "Settings",
+		Icon = "gear",
+		Type = "Double"
+	})
+
+	local ThemeSection = SettingsTab:AddSection({ Name = "Theme Manager", Position = "Left" })
+	local CustomSection = SettingsTab:AddSection({ Name = "Custom Colors", Position = "Left" })
+	local ConfigSection = SettingsTab:AddSection({ Name = "Config Manager", Position = "Right" })
+
+	local themes = {} for name, _ in next, NeverLose.Themes do table.insert(themes, name) end
+
+	ThemeSection:AddLabel("Presets"):AddDropdown({
+		Values = themes,
+		Default = "Neverlose",
+		Callback = function(val)
+			NeverLose:SetTheme(val)
+		end
+	})
+
+	CustomSection:AddLabel("Accent"):AddColorPicker({
+		Default = NeverLose.AccentColor,
+		Flag = "Theme/Accent",
+		Callback = function(color)
+			NeverLose.AccentColor = color
+			NeverLose:UpdateUIColors()
+		end
+	})
+
+	CustomSection:AddLabel("Main"):AddColorPicker({
+		Default = NeverLose.MainColor,
+		Flag = "Theme/Main",
+		Callback = function(color)
+			NeverLose.MainColor = color
+			NeverLose:UpdateUIColors()
+		end
+	})
+
+	ConfigSection:AddLabel("Name"):AddTextInput({
+		Placeholder = "config name...",
+		Callback = function(val)
+			Window._configInputName = val
+		end
+	})
+
+	ConfigSection:AddButton({
+		Name = "Save Config",
+		Icon = "arrow-down-to-line",
+		Callback = function()
+			local name = Window._configInputName or "Default"
+			if Window.ConfigLib then
+				writefile(Window.ConfigFolder .. "/" .. name, Window.ConfigLib:GetData())
+				Window.ConfigLib:RefreshConfig()
+				NeverLose:CreateNotification().new({
+					Title = "Success",
+					Content = "Config '" .. name .. "' saved!",
+					Duration = 3
+				})
+			end
+		end
+	})
+
+	ConfigSection:AddButton({
+		Name = "Refresh List",
+		Icon = "arrow-rotate-right",
+		Callback = function()
+			if Window.ConfigLib then
+				Window.ConfigLib:RefreshConfig()
+			end
+		end
+	})
+
+	return SettingsTab
 end;
 
 function NeverLose:Unload()
