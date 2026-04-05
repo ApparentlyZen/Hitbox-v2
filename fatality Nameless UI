@@ -1,7 +1,7 @@
 --[[
     		Fatality-Dark Interface
 
-    Author: HimselfZen
+    Author: 4lpaca
     License: MIT
     Github: https://github.com/4lpaca-pin/Fatality
 --]]
@@ -4157,70 +4157,6 @@ function Fatality:CreateConfigWindow(Root: ScreenGui , Fatal , Button: ImageButt
 		end,
 	});
 
-	function Fatal:AddSaveManager(Tab)
-		local Section = Tab:AddSection({Name = "Save Manager", Position = "Left"})
-		local ConfigInput = Section:AddToggle({Name = "Config Name (Use Input below)", Default = false})
-		local ConfigList = Section:AddListBox({Name = "Configurations", Values = {}, Multi = false})
-		
-		local ConfigName = ""
-		local ConfigWindow = Fatal:AddConfig()
-		ConfigWindow:Init(Window.Name, "NamelessClient")
-
-		local function Refresh()
-			ConfigWindow:ReloadConfig()
-			local Files = {}
-			for _, v in next, listfiles(ConfigWindow.ConfigDirectory) do
-				local spl = string.split(v, "/")
-				table.insert(Files, spl[#spl])
-			end
-			ConfigList:SetValues(Files)
-			ConfigList:Refresh()
-		end
-
-		Section:AddButton({Name = "Refresh List", Callback = Refresh})
-		Section:AddButton({Name = "Create/Overwrite Config", Callback = function()
-			local Name = ConfigName ~= "" and ConfigName or "Default"
-			local flags = Fatal:GetFlagConfig()
-			ConfigWindow:SaveConfig(Name, game:GetService("HttpService"):JSONEncode(flags))
-			Refresh()
-		end})
-		Section:AddButton({Name = "Load Selected", Callback = function()
-			local Selected = ConfigList:GetValue()
-			if Selected then ConfigWindow:LoadConfig(Selected) end
-		end})
-		Section:AddButton({Name = "Delete Selected", Callback = function()
-			local Selected = ConfigList:GetValue()
-			if Selected then 
-				ConfigWindow:DeleteConfig(Selected)
-				Refresh()
-			end
-		end})
-
-		-- Link input to a dummy toggle or textbox if you add one later
-		-- Pour l'instant on utilise le ConfigWindow:Init original en arriere plan
-		Refresh()
-	end
-
-	function Fatal:AddThemeManager(Tab)
-		local Section = Tab:AddSection({Name = "Theme Manager", Position = "Right"})
-		
-		Section:AddColorPicker({
-			Name = "Accent Color",
-			Default = Fatality.Colors.Main,
-			Callback = function(color)
-				Fatality:SetAccentColor(color)
-			end
-		})
-
-		Section:AddButton({Name = "Reset Theme", Callback = function()
-			Fatality:SetAccentColor(Color3.fromRGB(255, 106, 133))
-		end})
-		
-		Section:AddButton({Name = "Refresh UI Sync", Callback = function()
-			Fatality:SetAccentColor(Fatality.Colors.Main)
-		end})
-	end
-
 	return res;
 end;
 
@@ -5185,6 +5121,61 @@ function Fatality.new(Window: Window)
 			end;
 		end);
 		
+		function Fatal:AddSaveManager(Tab)
+			local Section = Tab:AddSection({Name = "Save Manager", Position = "Left"})
+			local ConfigList = Section:AddListBox({Name = "Configurations", Values = {}, Multi = false})
+			
+			local ConfigWindow = Fatal:AddConfig()
+			ConfigWindow:Init(Window.Name, "Fatality")
+
+			local function Refresh()
+				ConfigWindow:ReloadConfig()
+				local Files = {}
+				for _, v in next, listfiles(ConfigWindow.ConfigDirectory) do
+					local spl = (string.find(v,'/',1,true) and string.split(v,'/')) or (string.find(v,'\\',1,true) and string.split(v,'\\'));
+					table.insert(Files, spl[#spl])
+				end
+				ConfigList:SetValues(Files)
+				ConfigList:Refresh()
+			end
+
+			Section:AddButton({Name = "Refresh List", Callback = Refresh})
+			Section:AddButton({Name = "Load Selected", Callback = function()
+				local Selected = ConfigList:GetValue()
+				if Selected then ConfigWindow:LoadConfig(Selected) end
+			end})
+			Section:AddButton({Name = "Overwrite Selected", Callback = function()
+				local Selected = ConfigList:GetValue()
+				if Selected then 
+					local flags = Fatal:GetFlagConfig()
+					ConfigWindow:SaveConfig(Selected, game:GetService("HttpService"):JSONEncode(flags))
+					Refresh()
+				end
+			end})
+			Section:AddButton({Name = "Delete Selected", Callback = function()
+				local Selected = ConfigList:GetValue()
+				if Selected then 
+					ConfigWindow:DeleteConfig(Selected)
+					Refresh()
+				end
+			end})
+			Refresh()
+		end
+
+		function Fatal:AddThemeManager(Tab)
+			local Section = Tab:AddSection({Name = "Theme Manager", Position = "Right"})
+			Section:AddColorPicker({
+				Name = "Accent Color",
+				Default = Fatality.Colors.Main,
+				Callback = function(color)
+					Fatality:SetAccentColor(color)
+				end
+			})
+			Section:AddButton({Name = "Reset Theme", Callback = function()
+				Fatality:SetAccentColor(Color3.fromRGB(255, 106, 133))
+			end})
+		end
+
 		function MenuLib:AddPreview(Config: Preview)
 			Config = Config or {};
 			Config.Name = Config.Name or "PREVIEW";
