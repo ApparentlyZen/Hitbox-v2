@@ -5987,6 +5987,9 @@ function NeverLose:CreateWindow(Config)
 							ImageTransparency = Window.GhostTransparency or 0.9,
 							BackgroundTransparency = Window.GhostTransparency or 0.9
 						})
+						NeverLose.PlayAnimate(UIStroke, TweenInfo.new(0.5), {
+							Transparency = Window.GhostTransparency or 0.9 -- ✅ Contour invisible
+						})
 					end
 				end)
 			end
@@ -5999,6 +6002,7 @@ function NeverLose:CreateWindow(Config)
 				if duration < 0.4 then -- ✅ Simple clic pour ouvrir
 					Window:ToggleInterface()
 					NeverLose.PlayAnimate(MobileToggle, TweenInfo.new(0.2), { ImageTransparency = 0, BackgroundTransparency = 0.2 })
+					NeverLose.PlayAnimate(UIStroke, TweenInfo.new(0.2), { Transparency = 0.5 }) -- ✅ Reset bordure
 				end
 			end
 		end))
