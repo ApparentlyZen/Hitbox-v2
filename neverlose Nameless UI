@@ -280,7 +280,7 @@ end
 NeverLose.NameRegisitry = {};
 NeverLose.IsMosueOverOtherFrame = false;
 NeverLose.GlobalLogo = "rbxassetid://6224526576";
-NeverLose.ImageColorMapping = "rbxassetid://4155801252";
+NeverLose.ImageColorMapping = "rbxassetid://6224526576";
 
 if getcustomasset then
 	local link = "https://github.com/4lpaca-pin/NeverLose/blob/main/assets/%s?raw=true";
@@ -3931,7 +3931,8 @@ function NeverLose:CreateWindow(Config)
 		Tabs = {},
 		CurrentTab = 1,
 		Keybind = Config.Keybind,
-		Enable3DRenderer = Config.Enable3DRenderer
+		Enable3DRenderer = Config.Enable3DRenderer,
+		GhostTransparency = 0.9 -- ✅ Valeur par défaut
 	};
 
 	NeverLose.GlobalLogo = Window.Logo;
@@ -5973,12 +5974,33 @@ function NeverLose:CreateWindow(Config)
 		-- Permet de déplacer le bouton de toggle sur l'écran
 		NeverLose.Drag(MobileToggle, MobileToggle, 0.05)
 
-		NeverLose:AddSignal(MobileToggle.Activated:Connect(function()
-			Window:ToggleInterface()
-			NeverLose.PlayAnimate(MobileToggle, TweenInfo.new(0.2), {
-				ImageTransparency = Window.Signal:GetValue() and 0 or 0.5,
-				BackgroundTransparency = Window.Signal:GetValue() and 0.2 or 0.7
-			})
+		local holdStart = 0
+		local isHolding = false
+
+		NeverLose:AddSignal(MobileToggle.InputBegan:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+				isHolding = true
+				holdStart = tick()
+				task.delay(3, function()
+					if isHolding and (tick() - holdStart) >= 3 then
+						NeverLose.PlayAnimate(MobileToggle, TweenInfo.new(0.5), {
+							ImageTransparency = Window.GhostTransparency or 0.9,
+							BackgroundTransparency = Window.GhostTransparency or 0.9
+						})
+					end
+				end)
+			end
+		end))
+
+		NeverLose:AddSignal(MobileToggle.InputEnded:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+				local duration = tick() - holdStart
+				isHolding = false
+				if duration < 0.4 then -- ✅ Simple clic pour ouvrir
+					Window:ToggleInterface()
+					NeverLose.PlayAnimate(MobileToggle, TweenInfo.new(0.2), { ImageTransparency = 0, BackgroundTransparency = 0.2 })
+				end
+			end
 		end))
 	end
 
@@ -6788,6 +6810,16 @@ function NeverLose:CreateSettingsPage(Window, KeybindList)
 		Callback = function(color)
 			NeverLose.MainColor = color
 			NeverLose:UpdateUIColors()
+		end
+	})
+
+	-- ✅ Paramètre Ghost Mode pour le bouton flottant
+	CustomSection:AddLabel("Logo Ghost Trans"):AddSlider({
+		Min = 0,
+		Max = 100,
+		Default = (Window.GhostTransparency or 0.9) * 100,
+		Callback = function(val)
+			Window.GhostTransparency = val / 100
 		end
 	})
 
