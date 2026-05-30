@@ -279,7 +279,7 @@ end
 
 NeverLose.NameRegisitry = {};
 NeverLose.IsMosueOverOtherFrame = false;
-NeverLose.GlobalLogo = "rbxassetid://6224526576";
+NeverLose.GlobalLogo = "rbxassetid://6224526576"; -- Change cet ID pour le défaut global
 NeverLose.ImageColorMapping = "rbxassetid://6224526576";
 
 if getcustomasset then
@@ -5985,10 +5985,10 @@ function NeverLose:CreateWindow(Config)
 					if isHolding and (tick() - holdStart) >= 3 then
 						NeverLose.PlayAnimate(MobileToggle, TweenInfo.new(0.5), {
 							ImageTransparency = Window.GhostTransparency or 0.9,
-							BackgroundTransparency = Window.GhostTransparency or 0.9
+							BackgroundTransparency = Window.GhostTransparency or 0.9,
 						})
 						NeverLose.PlayAnimate(UIStroke, TweenInfo.new(0.5), {
-							Transparency = Window.GhostTransparency or 0.9 -- ✅ Contour invisible
+							Transparency = Window.GhostTransparency or 0.9 -- ✅ Bordure invisible aussi
 						})
 					end
 				end)
@@ -6002,7 +6002,6 @@ function NeverLose:CreateWindow(Config)
 				if duration < 0.4 then -- ✅ Simple clic pour ouvrir
 					Window:ToggleInterface()
 					NeverLose.PlayAnimate(MobileToggle, TweenInfo.new(0.2), { ImageTransparency = 0, BackgroundTransparency = 0.2 })
-					NeverLose.PlayAnimate(UIStroke, TweenInfo.new(0.2), { Transparency = 0.5 }) -- ✅ Reset bordure
 				end
 			end
 		end))
