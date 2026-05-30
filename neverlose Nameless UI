@@ -4316,8 +4316,8 @@ function NeverLose:CreateWindow(Config)
 	LogoImage.Size = UDim2.new(0, 35, 0, 35)
 	LogoImage.ZIndex = 7
 	LogoImage.Image = Window.Logo
-	LogoImage.ImageColor3 = NeverLose.LogoColor
-	NeverLose:RegisterColor(LogoImage, "ImageColor3", "Logo")
+	LogoImage.ImageColor3 = NeverLose.IconColor
+	NeverLose:RegisterColor(LogoImage, "ImageColor3")
 
 	UICorner_2.CornerRadius = UDim.new(0, 7)
 	UICorner_2.Parent = LogoImage
@@ -4333,8 +4333,7 @@ function NeverLose:CreateWindow(Config)
 	WindowName.ZIndex = 7
 	WindowName.Font = Enum.Font.GothamBold
 	WindowName.Text = Window.Name
-	WindowName.TextColor3 = NeverLose.TextColor
-	NeverLose:RegisterColor(WindowName, "TextColor3", "Text")
+	WindowName.TextColor3 = Color3.fromRGB(255, 255, 255)
 	WindowName.TextSize = 18.000
 	WindowName.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -4349,8 +4348,7 @@ function NeverLose:CreateWindow(Config)
 	WindowContent.ZIndex = 7
 	WindowContent.Font = Enum.Font.GothamBold
 	WindowContent.Text = Window.Content
-	WindowContent.TextColor3 = NeverLose.MutedColor
-	NeverLose:RegisterColor(WindowContent, "TextColor3", "Muted")
+	WindowContent.TextColor3 = Color3.fromRGB(255, 255, 255)
 	WindowContent.TextSize = 9.000
 	WindowContent.TextTransparency = 0.650
 	WindowContent.TextXAlignment = Enum.TextXAlignment.Left
@@ -5151,7 +5149,6 @@ function NeverLose:CreateWindow(Config)
 			SectionHandler.Position = UDim2.new(0.5, 0, 0, 20)
 			SectionHandler.Size = UDim2.new(1, -10, 1, -21)
 			SectionHandler.ZIndex = 9
-			NeverLose:RegisterColor(SectionHandler, "BackgroundColor3", "Card")
 
 			UIStroke.Transparency = 0.650
 			UIStroke.Color = Color3.fromRGB(45, 48, 58)
@@ -6007,8 +6004,8 @@ function NeverLose:CreateWindow(Config)
 		MobileToggle.Position = UDim2.new(0.05, 0, 0.15, 0)
 		MobileToggle.Size = UDim2.fromOffset(45, 45)
 		MobileToggle.Image = Window.Logo
-		MobileToggle.ImageColor3 = NeverLose.LogoColor
-		NeverLose:RegisterColor(MobileToggle, "ImageColor3", "Logo")
+		MobileToggle.ImageColor3 = NeverLose.AccentColor
+		NeverLose:RegisterColor(MobileToggle, "ImageColor3")
 		MobileToggle.ZIndex = 200
 
 		UICorner.CornerRadius = UDim.new(0, 10)
@@ -6832,15 +6829,13 @@ function NeverLose:CreateSettingsPage(Window, KeybindList)
 		Type = "Double"
 	})
 
-	local ThemeSection = SettingsTab:AddSection({ Name = "Theme Presets", Position = "Left" })
-	local CustomSection = SettingsTab:AddSection({ Name = "Menu Customization", Position = "Left" })
-	local TextColorSection = SettingsTab:AddSection({ Name = "Text Colors", Position = "Left" })
-	local LogoSection = SettingsTab:AddSection({ Name = "Logo Settings", Position = "Right" })
+	local ThemeSection = SettingsTab:AddSection({ Name = "Theme Manager", Position = "Left" })
+	local CustomSection = SettingsTab:AddSection({ Name = "Custom Colors", Position = "Left" })
 	local ConfigSection = SettingsTab:AddSection({ Name = "Config Manager", Position = "Right" })
 
 	local themes = {} for name, _ in next, NeverLose.Themes do table.insert(themes, name) end
 
-	ThemeSection:AddLabel("Choose Preset"):AddDropdown({
+	ThemeSection:AddLabel("Presets"):AddDropdown({
 		Values = themes,
 		Default = "Neverlose",
 		Callback = function(val)
@@ -6857,7 +6852,7 @@ function NeverLose:CreateSettingsPage(Window, KeybindList)
 		end
 	})
 
-	CustomSection:AddLabel("Background"):AddColorPicker({
+	CustomSection:AddLabel("Main"):AddColorPicker({
 		Default = NeverLose.MainColor,
 		Flag = "Theme/Main",
 		Callback = function(color)
@@ -6866,44 +6861,8 @@ function NeverLose:CreateSettingsPage(Window, KeybindList)
 		end
 	})
 
-	CustomSection:AddLabel("Cards/Sections"):AddColorPicker({
-		Default = NeverLose.CardColor,
-		Flag = "Theme/Card",
-		Callback = function(color)
-			NeverLose.CardColor = color
-			NeverLose:UpdateUIColors()
-		end
-	})
-
-	TextColorSection:AddLabel("Primary Text"):AddColorPicker({
-		Default = NeverLose.TextColor,
-		Flag = "Theme/Text",
-		Callback = function(color)
-			NeverLose.TextColor = color
-			NeverLose:UpdateUIColors()
-		end
-	})
-
-	TextColorSection:AddLabel("Muted Text"):AddColorPicker({
-		Default = NeverLose.MutedColor,
-		Flag = "Theme/Muted",
-		Callback = function(color)
-			NeverLose.MutedColor = color
-			NeverLose:UpdateUIColors()
-		end
-	})
-
-	LogoSection:AddLabel("Logo Color"):AddColorPicker({
-		Default = NeverLose.LogoColor,
-		Flag = "Theme/LogoColor",
-		Callback = function(color)
-			NeverLose.LogoColor = color
-			NeverLose:UpdateUIColors()
-		end
-	})
-
 	-- ✅ Paramètre Ghost Mode pour le bouton flottant
-	LogoSection:AddLabel("Ghost Transparency"):AddSlider({
+	CustomSection:AddLabel("Logo Ghost Trans"):AddSlider({
 		Min = 0,
 		Max = 100,
 		Default = (Window.GhostTransparency or 0.9) * 100,
