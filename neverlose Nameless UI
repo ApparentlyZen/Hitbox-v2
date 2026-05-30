@@ -248,6 +248,50 @@ NeverLose.Themes = {
 	["Amethyst"] = {
 		AccentColor = Color3.fromRGB(155, 89, 182),
 		MainColor = Color3.fromRGB(15, 10, 20),
+	},
+	["Sakura"] = {
+		AccentColor = Color3.fromRGB(255, 183, 197),
+		MainColor = Color3.fromRGB(45, 30, 35),
+	},
+	["Ocean"] = {
+		AccentColor = Color3.fromRGB(0, 162, 255),
+		MainColor = Color3.fromRGB(5, 15, 25),
+	},
+	["Toxic"] = {
+		AccentColor = Color3.fromRGB(173, 255, 47),
+		MainColor = Color3.fromRGB(10, 15, 10),
+	},
+	["Valentine"] = {
+		AccentColor = Color3.fromRGB(255, 64, 129),
+		MainColor = Color3.fromRGB(30, 5, 15),
+	},
+	["Ghost"] = {
+		AccentColor = Color3.fromRGB(150, 150, 150),
+		MainColor = Color3.fromRGB(25, 25, 25),
+	},
+	["Inferno"] = {
+		AccentColor = Color3.fromRGB(255, 69, 0),
+		MainColor = Color3.fromRGB(20, 5, 0),
+	},
+	["Nebula"] = {
+		AccentColor = Color3.fromRGB(138, 43, 226),
+		MainColor = Color3.fromRGB(10, 5, 20),
+	},
+	["Gold"] = {
+		AccentColor = Color3.fromRGB(255, 215, 0),
+		MainColor = Color3.fromRGB(15, 15, 5),
+	},
+	["Mint"] = {
+		AccentColor = Color3.fromRGB(152, 255, 152),
+		MainColor = Color3.fromRGB(10, 20, 15),
+	},
+	["Candy"] = {
+		AccentColor = Color3.fromRGB(255, 105, 180),
+		MainColor = Color3.fromRGB(20, 10, 40),
+	},
+	["Monochrome"] = {
+		AccentColor = Color3.fromRGB(255, 255, 255),
+		MainColor = Color3.fromRGB(20, 20, 20),
 	}
 };
 
@@ -3980,8 +4024,9 @@ function NeverLose:CreateWindow(Config)
 	WindowFrame.Name = NeverLose.RandomString();
 	WindowFrame.Parent = NeverLose.ScreenGui;
 	WindowFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-	WindowFrame.BackgroundColor3 = Color3.fromRGB(8, 8, 13)
+	WindowFrame.BackgroundColor3 = NeverLose.MainColor
 	WindowFrame.BackgroundTransparency = 0.055
+	NeverLose:RegisterColor(WindowFrame, "BackgroundColor3", "Main")
 	WindowFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	WindowFrame.BorderSizePixel = 0
 	WindowFrame.ClipsDescendants = true
