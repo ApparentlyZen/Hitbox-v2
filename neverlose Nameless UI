@@ -4317,7 +4317,6 @@ function NeverLose:CreateWindow(Config)
 	LogoImage.ZIndex = 7
 	LogoImage.Image = Window.Logo
 	LogoImage.ImageColor3 = NeverLose.IconColor
-	NeverLose:RegisterColor(LogoImage, "ImageColor3")
 
 	UICorner_2.CornerRadius = UDim.new(0, 7)
 	UICorner_2.Parent = LogoImage
@@ -6919,5 +6918,110 @@ function NeverLose:Unload()
 		pcall(v.Disconnect,v)
 	end;
 end;
+
+function NeverLose:CreateScriptManager()
+    local Manager = {
+        LoadedScripts = {} -- [scriptName] = { sandbox, connections, instances, threads }
+    }
+
+    -- Charge et exécute un script dans un environnement contrôlé (sandbox)
+    function Manager:Load(scriptName, scriptUrl)
+        if self.LoadedScripts[scriptName] then
+            -- Le script est déjà chargé, on ne fait rien pour éviter les doublons
+            return true, "Already loaded"
+        end
+
+        local success, scriptContent = pcall(game.HttpGet, game, scriptUrl)
+        if not success then
+            return false, "Failed to download script: " .. tostring(scriptContent)
+        end
+
+        local scriptFunc, loadError = loadstring(scriptContent)
+        if not scriptFunc then
+            return false, "Failed to load script: " .. tostring(loadError)
+        end
+
+        -- Création du sandbox
+        local sandbox = {
+            -- Utilitaires de base
+            game = game,
+            workspace = workspace,
+            print = print,
+            pcall = pcall,
+            xpcall = xpcall,
+            task = task,
+            -- Services courants
+            Players = Players,
+            RunService = RunService,
+            UserInputService = UserInputService,
+            TweenService = TweenService,
+            ReplicatedStorage = ReplicatedStorage,
+            HttpService = HttpService,
+            VirtualInputManager = VirtualInputManager,
+            -- Références locales
+            player = LocalPlayer,
+            camera = CurrentCamera,
+            -- Librairie UI
+            NeverLose = NeverLose,
+            Notification = NeverLose:CreateNotification(),
+            Logging = NeverLose:CreateLogger(),
+            Indicator = NeverLose:CreateIndicator(),
+        }
+        setmetatable(sandbox, { __index = getfenv() })
+
+        local scriptData = {
+            sandbox = sandbox,
+            connections = {},
+            instances = {},
+            threads = {},
+        }
+        self.LoadedScripts[scriptName] = scriptData
+
+        -- Surcharge de fonctions clés dans le sandbox pour tracker les créations
+        local oldConnect = game.RBXScriptSignal.Connect
+        sandbox.game.RBXScriptSignal.Connect = function(signal, func)
+            local conn = oldConnect(signal, func)
+            table.insert(scriptData.connections, conn)
+            return conn
+        end
+
+        local oldNew = Instance.new
+        sandbox.Instance.new = function(className, parent)
+            local inst = oldNew(className)
+            if parent then inst.Parent = parent end
+            table.insert(scriptData.instances, inst)
+            return inst
+        end
+
+        -- Exécution du script dans le sandbox
+        local execSuccess, execError = pcall(setfenv(scriptFunc, sandbox))
+
+        -- Restauration des fonctions originales après l'exécution
+        sandbox.game.RBXScriptSignal.Connect = oldConnect
+        sandbox.Instance.new = oldNew
+
+        if not execSuccess then
+            self:Unload(scriptName) -- Nettoyer en cas d'erreur à l'exécution
+            return false, "Execution error: " .. tostring(execError)
+        end
+
+        return true
+    end
+
+    -- Décharge un script et nettoie toutes ses ressources
+    function Manager:Unload(scriptName)
+        local scriptData = self.LoadedScripts[scriptName]
+        if not scriptData then return end
+
+        for _, conn in ipairs(scriptData.connections) do pcall(conn.Disconnect, conn) end
+        for _, inst in ipairs(scriptData.instances) do pcall(inst.Destroy, inst) end
+        
+        self.LoadedScripts[scriptName] = nil
+    end
+
+    function Manager:IsLoaded(scriptName) return self.LoadedScripts[scriptName] ~= nil end
+
+    return Manager
+end
 
 return NeverLose;
