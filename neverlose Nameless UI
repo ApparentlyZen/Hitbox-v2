@@ -6993,13 +6993,11 @@ function NeverLose:CreateScriptManager()
             return inst
         end
 
+        -- Préparation de l'environnement du script
+        setfenv(scriptFunc, sandbox)
+
         -- Exécution du script dans le sandbox
-        local execSuccess, execError = pcall(setfenv(scriptFunc, sandbox))
-
-        -- Restauration des fonctions originales après l'exécution
-        sandbox.game.RBXScriptSignal.Connect = oldConnect
-        sandbox.Instance.new = oldNew
-
+        local execSuccess, execError = pcall(scriptFunc)
         if not execSuccess then
             self:Unload(scriptName) -- Nettoyer en cas d'erreur à l'exécution
             return false, "Execution error: " .. tostring(execError)
